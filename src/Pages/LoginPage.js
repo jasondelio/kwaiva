@@ -9,9 +9,9 @@ function LoginPage(params) {
       </div>
       <div className="container">
         <h1>ADMIN LOGIN</h1>
-        <input className="inputbox" value={"USERNAME OR EMAIL"} onChange={() => { "ye" }} />
-        <input className="inputbox" value="PASSWORD" onChange={() => { "ye" }} />
-        <a className="login" onClick={() => { window.location.pathname = "/" }}>LOGIN</a>
+        <input className="inputbox" placeholder = "USERNAME OR EMAIL" />
+        <input type="password" className="inputbox" placeholder = "PASSWORD" />
+        <a className="login" onClick={() => { window.location.pathname = "/songs" }}>LOGIN</a>
       </div>
     </div>
   );

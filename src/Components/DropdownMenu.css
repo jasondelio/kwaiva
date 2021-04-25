@@ -1,0 +1,44 @@
+.DropdownMenu
+{
+  margin-top: 20px;
+  margin-right: 50px;
+  float: right;
+}
+
+.DropdownMenu .dropdown
+{
+  height: 40px;
+  width: 120px;
+  color: white;
+  border: #524E4E;
+  border-radius: 20px;
+  background-color: #524E4E;
+  font-size: 22px;
+  font-family: 'Norwester';
+}
+
+.DropdownMenu .menu
+{
+  border-radius: 10px;
+  background-color: #524E4E;
+  width: 150px;
+  padding-bottom: 10px;
+}
+
+.DropdownMenu .item
+{
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+  padding-left: 15px;
+}
+
+.Downarrow {
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 6px;
+  margin-bottom: 5px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
