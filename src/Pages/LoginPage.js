@@ -15,10 +15,23 @@ function handleVerification(username, password) {
   }
 }
 
-function LoginPage(params) {
-  const [username, setUsername] = useState('');
-  const [passwordss, setPassword] = useState('');
 
+function LoginPage() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handlerKeyPressed = (event) =>
+  {
+    if(event.key == 'Enter')
+    {
+      handleVerification(username, password);
+    }
+  };
+
+  const handlerClicked = () =>
+  {
+    handleVerification(username, password);
+  }
   return (
     <div className="LoginPage">
       <div className="img_con">
@@ -26,9 +39,9 @@ function LoginPage(params) {
       </div>
       <div className="container">
         <h1>ADMIN LOGIN</h1>
-        <input className="inputbox" placeholder="USERNAME OR EMAIL" onChange={(e) => setUsername(e.target.value)} />
-        <input type="password" className="inputbox" placeholder="PASSWORD" onChange={(e) => setPassword(e.target.value)} />
-        <a className="login" onClick={() => handleVerification(username, passwordss)}>LOGIN</a>
+        <input className="inputbox" placeholder="USERNAME OR EMAIL" onChange={(e) => setUsername(e.target.value)} onKeyPress={handlerKeyPressed} />
+        <input type="password" className="inputbox" placeholder="PASSWORD" onChange={(e) => setPassword(e.target.value)} onKeyPress={handlerKeyPressed} />
+        <a className="login" onClick={handlerClicked}>LOGIN</a>
       </div>
     </div>
   );
