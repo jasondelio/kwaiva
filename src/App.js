@@ -1,14 +1,12 @@
 import React from 'react';
 import './App.css';
-import Sidebar from "./Components/Sidebar";
-import Topbar from "./Components/Topbar";
-import LoginPage from "./Pages/LoginPage"
+
+import LoginPage from './Pages/LoginPage'
+import SongsPage from './Pages/SongsPage';
+import UsersPage from './Pages/UsersPage'
 function App() {
   return (
-    <React.Fragment>
-      <Sidebar/>
-      <Topbar/>
-    </React.Fragment>
+    <UsersPage/>
   );
 }
 

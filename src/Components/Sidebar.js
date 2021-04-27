@@ -22,6 +22,7 @@ function Sidebar() {
                     <div className = "title">REQUEST</div>
                 </li>
             </ul>
+            <p className = "copyright">&#169;2020 Kwaiva.<br/>All Rights Reserved</p>
         </div>
     );
 }

@@ -7,6 +7,7 @@
 
 .DropdownMenu .dropdown
 {
+  cursor: pointer;
   height: 40px;
   width: 120px;
   color: white;
