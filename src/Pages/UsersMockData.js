@@ -12,7 +12,154 @@ export const UsersMockData = [
         username: 'admin',
         email: 'admin@kwaiva.com',
         lastname: 'admin',
-        firstname: 'jason',
-        role: 'fans'
+        firstname: 'kwaiva',
+        role: 'admin'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
+    },
+    {
+        username: 'taylorswift',
+        email: 'taylorswift@gmail.com',
+        lastname: 'swift',
+        firstname: 'taylor',
+        role: 'musician'
     }
 ]

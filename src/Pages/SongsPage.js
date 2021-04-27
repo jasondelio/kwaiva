@@ -5,16 +5,34 @@ import Topbar from "../Components/Topbar";
 import {SongsMockData} from "./SongsMockData";
 
 function SongsPage() {
+    const [searchTerm, setSearchTerm] = React.useState("");
+    const [searchResults, setSearchResults] = React.useState([]);
+    const handleChange = event => {
+       setSearchTerm(event.target.value);
+     };
+    React.useEffect(() => {
+       const results = SongsMockData.filter(song =>
+         song.title.toLocaleLowerCase().includes(searchTerm)
+       );
+       setSearchResults(results);
+     }, [searchTerm]);
+
     return (
     <React.Fragment>
         <Sidebar/>
         <Topbar/>
         <div className = "SongsPage">
             <button className = "UploadButton">UPLOAD</button>
-            <input className = "SearchBar" type = "search" placeholder = "Search a song .."/>
+            <input 
+                className = "SearchBar" 
+                type = "search" 
+                placeholder = "Search a song .."
+                value = {searchTerm}
+                onChange = {handleChange}
+            />
             <div className = "List">
                 <ul>
-                    {SongsMockData.map((song, index) => (
+                    {searchResults.map((song, index) => (
                         <li className="row" key={index}>
                             {song.photo}
                             <p className = "title"><b>{song.title}</b><br/><a className = "musician">by {song.musician}</a></p>

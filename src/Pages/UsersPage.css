@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
+
 .UsersPage
 {
     background-color: #222121;
@@ -39,12 +41,32 @@
 .UsersPage table
 {
     position: sticky;
-    width: 950px;
+    width: 980px;
     background-color: white;
     margin-top: 120px;
     margin-left: 310px;
     margin-bottom: 150px;
+    font-family: "Playfair Display";
+}
 
+.UsersPage .header
+{
+    background-color: #CBCBCB;
+    font-size: 17px;
+    line-height: 40px;
+}
+
+.UsersPage .list
+{
+    font-size: 15px;
+    text-align: center;
+}
+
+.UsersPage .list td
+{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    
 }
 
 ::-webkit-scrollbar {
