@@ -54,6 +54,7 @@ h1 {
 
 
 .login {
+  cursor: pointer;
   font-family: 'Norwester';
   display: inline-block;
   border-radius: 11px;
