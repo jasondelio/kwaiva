@@ -7,9 +7,6 @@ import SongsPage from './Pages/SongsPage';
 import UsersPage from './Pages/UsersPage';
 import Authorization from './Pages/Authorization';
 import LoggedInUser from './Pages/LoggedInUser';
-import LogoutPage from './Pages/LogoutPage'
-
-
 
 function App() {
 
@@ -27,7 +24,6 @@ function App() {
     <BrowserRouter>
       <Switch>
         <PrivateRoute path='/login' component={LoginPage} />
-        <Route exact path="/logout" component={LogoutPage} />
         <Authorization>
           <Switch>
             <Route path="/songs" component={SongsPage} />
