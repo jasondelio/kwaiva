@@ -26,7 +26,7 @@ function LoginPage() {
     const tempPassword = 'passwordTempTempTafa';
     var hash = bcrypt.hashSync(tempPassword, saltRounds);
     var isValid = bcrypt.compareSync(password, hash);
-    if (isValid && username === "admin") {
+    if (isValid && username == "admin") {
       click();
     }
     else {
@@ -35,7 +35,7 @@ function LoginPage() {
   };
 
   const handlerKeyPressed = (event) => {
-    if (event.key === 'Enter' && username.length >= 1 && password.length >= 1) {
+    if (event.key == 'Enter' && username.length >= 1 && password.length >= 1) {
       handleVerification(username, password);
     }
   };
