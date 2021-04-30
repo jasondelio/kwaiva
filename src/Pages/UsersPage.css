@@ -40,6 +40,7 @@
 
 .UsersPage table
 {
+    table-layout: fixed;
     position: sticky;
     width: 980px;
     background-color: white;
@@ -58,8 +59,14 @@
 
 .UsersPage .list
 {
+    cursor: pointer;
     font-size: 15px;
     text-align: center;
+}
+
+.UsersPage .list:hover
+{
+    background-color: #DBDBDB;
 }
 
 .UsersPage .list td
