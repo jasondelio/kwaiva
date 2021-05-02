@@ -30,7 +30,8 @@ function LoginPage() {
       click();
     }
     else {
-      window.location.pathname = "/login"
+      //window.location.pathname = "/login"
+      alert("The username or password is incorrect.");
     }
   };
 
