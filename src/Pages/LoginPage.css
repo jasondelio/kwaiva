@@ -32,6 +32,7 @@
 
 h1 {
   font-family: 'Playfair Display SC', serif;
+  font-size: 2.2vw;
   padding-top: 20%;
   color: white;
   margin: 0%;
@@ -42,7 +43,7 @@ h1 {
   margin-top: 13%;
   font-family: 'Domine', serif;
   align-self: center;
-  font-size: 16px;
+  font-size: 1vw;
   height: 30%;
   width: 80%;
   background-color: #575E66;
@@ -58,7 +59,6 @@ h1 {
   font-family: 'Norwester';
   display: inline-block;
   border-radius: 11px;
-  font-size: 13pt;
   text-align: center;
   padding: 16px 0px;
   background: #32CD32;
@@ -69,6 +69,7 @@ h1 {
   width: 63%;
   align-self: center;
   font-weight: bold;
-  font-size: 19px;
+  font-size: 1.5vw;
   opacity:0.9;
 }
+

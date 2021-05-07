@@ -7,6 +7,8 @@ import SongsPage from './Pages/SongsPage';
 import UsersPage from './Pages/UsersPage';
 import Authorization from './Pages/Authorization';
 import LoggedInUser from './Pages/LoggedInUser';
+import NotFoundPage from './Pages/NotFoundPage';
+import RequestPage from './Pages/RequestPage';
 
 function App() {
 
@@ -28,7 +30,9 @@ function App() {
           <Switch>
             <Route path="/songs" component={SongsPage} />
             <Route path="/users" component={UsersPage} />
-            <Redirect from="/" to="/songs" />
+            <Route path="/request" component={RequestPage} />
+            <Route path="/" component={SongsPage} exact />
+            <Route path="*" component={NotFoundPage} />
           </Switch>
         </Authorization>
       </Switch>
