@@ -3,6 +3,7 @@
     width: 200px;
     background-color: #6B6B6B;
     position: absolute;
+    z-index: 1;
   }
   
 .Sidebar img
