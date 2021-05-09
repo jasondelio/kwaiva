@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./SongsPage.css"
 import Sidebar from "../Components/Sidebar";
 import Topbar from "../Components/Topbar";
 import {SongsMockData} from "./SongsMockData";
 import Modal from 'react-bootstrap/Modal'
 import { IoClose } from "react-icons/io5";
+import { FaPlay } from "react-icons/fa";
+import { FaPause } from "react-icons/fa";
+import { FaStop } from "react-icons/fa";
+
 
 function UploadSongPage(props) {
     return (
@@ -72,8 +76,8 @@ function UploadSongPage(props) {
 }
 
 function SongsPage() {
-    const [searchTerm, setSearchTerm] = React.useState("");
-    const [searchResults, setSearchResults] = React.useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
     const handleChange = event => {
        setSearchTerm(event.target.value);
      };
@@ -83,8 +87,18 @@ function SongsPage() {
        );
        setSearchResults(results);
      }, [searchTerm]);
-     const [modalShow, setModalShow] = React.useState(false);
+    const [modalShow, setModalShow] = useState(false);
+    
+    const [isPlay, setPlay] = useState(false);
 
+    const play = () => {
+        setPlay(!isPlay);
+
+    };
+
+    const stop = () => {
+        setPlay(false);
+    };
     return (
     <React.Fragment>
         <Sidebar/>
@@ -112,6 +126,10 @@ function SongsPage() {
                             <p className = "items">Price: {song.price}<br/> Quantity: {song.quantity}</p>
                             <p className = "items">Last edited<br/>{song.time}</p>
                             <button><u>EDIT</u></button>
+                            <a className = "audio">
+                                <div className = "play" onClick = {play}>{isPlay ? <FaPause/> : <FaPlay/>}</div>
+                                <div className = "stop" onClick = {stop}><FaStop/></div>
+                            </a>
                         </li>
                     ))}
                 </ul>

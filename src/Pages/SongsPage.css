@@ -113,7 +113,7 @@
     height: 20px;
     font-family: "Norwester";
     font-size: 18px;
-    margin-top: 30px;
+    margin-top: 33px;
     margin-right: 10px;
     color: white;
 }
@@ -122,6 +122,24 @@
 .List p
 {
     flex: 120%;
+}
+
+.List .audio
+{
+    margin-top: 2%;
+    margin-right: 2%;
+    padding-left: 4%;
+}
+
+.play
+{
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.stop
+{
+    cursor: pointer;
 }
 
 .List .title
