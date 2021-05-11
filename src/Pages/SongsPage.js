@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios';
+import { BrowserRouter, Route, Link, Switch, Redirect, useHistory } from 'react-router-dom';
 import "./SongsPage.css"
 import Sidebar from "../Components/Sidebar";
 import Topbar from "../Components/Topbar";
@@ -13,6 +14,110 @@ import afterone from './red.mp3';
 import immmmag from './kwaiva_logo_sample.png';
 
 function UploadSongPage(props) {
+    const history = useHistory();
+    const [values, setValues] = useState({
+        title: "",
+        musician: "",
+        genre: "",
+        year: 0,
+        price: 0,
+        quantity: 0,
+        urlYoutube: "",
+    });
+
+    function handleInputChange(e) {
+        const target = e.target;
+        const value = target.value;
+        const name = target.name;
+        console.log(values)
+        setValues({ ...values, [name]: value });
+    }
+
+    const [musicFile, setMusicFile] = useState("");
+    const [imageFile, setImageFile] = useState("");
+
+    function handleMusicFileChange(e) {
+        console.log(e.target.files[0]);
+
+        encodeMusicFileBase64(e.target.files[0]);
+        console.log(musicFile);
+    }
+    function handleImageFileChange(e) {
+        console.log(e.target.files[0]);
+        encodeImageFileBase64(e.target.files[0]);
+        console.log(imageFile);
+    }
+
+    const encodeMusicFileBase64 = (file) => {
+        var reader = new FileReader();
+        if (file) {
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                console.log(reader);
+                var Base64 = reader.result;
+                console.log(Base64);
+                setMusicFile(Base64);
+            };
+            reader.onerror = (error) => {
+                console.log("error: ", error);
+            };
+        }
+    };
+    const encodeImageFileBase64 = (file) => {
+        var reader = new FileReader();
+        if (file) {
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                console.log(reader);
+                var Base64 = reader.result;
+                console.log(Base64);
+                setImageFile(Base64);
+            };
+            reader.onerror = (error) => {
+                console.log("error: ", error);
+            };
+        }
+    };
+
+    const handleSubmit = ((event) => {
+        event.preventDefault()
+        console.log("connect")
+        console.log(event)
+        let formData = new FormData()
+        for (var key in values) {
+            formData.append(key, values[key]);
+        }
+        console.log(formData)
+        formData.append('musicfile', musicFile);
+        formData.append('imagefile', imageFile);
+        Axios({
+            method: "post",
+            url: "http://localhost:3001/getform",
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+        })
+            .then(function (response) {
+                //handle success
+                console.log(response);
+
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });
+        // event.props.onHide();
+        setValues({
+            title: "",
+            musician: "",
+            genre: "",
+            year: 0,
+            price: 0,
+            quantity: 0,
+            urlYoutube: "",
+        });
+        history.push({ pathname: 'songs' });
+    });
+
     return (
         <Modal
             className="ModalPage"
@@ -27,46 +132,48 @@ function UploadSongPage(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <form method="POST" onSubmit={(e) => handleSubmit(e)}>
+                <form onSubmit={(e) => { handleSubmit(e); props.onHide(); }}>
                     <p>
                         Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" id="input_title" />
+                    <input type="text" name="title" defaultValue={values.title} onChange={handleInputChange} />
                     </p>
                     <p>
                         Musician&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" />
+                    <input type="text" name="musician" defaultValue={values.musician} onChange={handleInputChange} />
                     </p>
                     <p>
                         Genre&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" />
+                    <input type="text" name="genre" defaultValue={values.genre} onChange={handleInputChange} />
                     </p>
                     <p>
                         Year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="number" min="1900" />
+                    <input type="number" min="1900" name="year" defaultValue={values.year} onChange={handleInputChange} />
                     </p>
                     <p>
                         Price&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="number" min="1" step="any" />
+                    <input type="number" min="1" step="any" name="price" defaultValue={values.price} onChange={handleInputChange} />
                     </p>
                     <p>
                         Quantity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="number" min="0" />
+                    <input type="number" min="0" name="quantity" defaultValue={values.quantity} onChange={handleInputChange} />
                     </p>
                     <p>
                         Youtube Link&nbsp;:&nbsp;
-                    <input type="url" />
+                    <input type="url" name="urlYoutube" defaultValue={values.urlYoutube} onChange={handleInputChange} />
                     </p>
                     <p>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Song File&nbsp;:&nbsp;
                     <input type="file"
                             id="song"
-                            accept="audio/*" />
+                            accept="audio/*"
+                            name="musicfile" defaultValue={values.musicfile} onChange={(e) => handleMusicFileChange(e)} />
                     </p>
                     <p>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Photo File&nbsp;:&nbsp;
                     <input type="file"
                             id="photo"
-                            accept="image/*" />
+                            accept="image/*"
+                            name="imagefile" defaultValue={values.imagefile} onChange={(e) => handleImageFileChange(e)} />
                     </p>
                     <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="reset" value="RESET"></input>
@@ -76,16 +183,223 @@ function UploadSongPage(props) {
         </Modal>
     )
 }
-const handleSubmit = ((event) => {
-    event.preventDefault()
-    console.log("connect")
-    console.log(event)
-    let formData = new FormData(event.target)
-    console.log(event.target)
-    Axios.post("http://localhost:3001/getform", formData).then(() => {
-        alert("successful update");
+
+function EditSongPage(props) {
+    const history = useHistory();
+
+    const handleDelete = ((event) => {
+        event.preventDefault()
+        console.log("connect")
+        console.log(event)
+        let formData = new FormData()
+        formData.append('song_id', props.songData.song_id);
+        console.log(formData.entries().next())
+        Axios({
+            method: "post",
+            url: "http://localhost:3001/deletesong",
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+        })
+            .then(function (response) {
+                //handle success
+                console.log(response);
+
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });
+        // event.props.onHide();
+        setValues({
+            id: 0,
+            title: "",
+            musician: "",
+            genre: "",
+            year: 0,
+            price: 0,
+            quantity: 0,
+            urlYoutube: "",
+        });
+        history.push({ pathname: 'songs' });
     });
-});
+
+    const [setsResult, setSearchResults] = useState([]);
+
+
+    // [props.index
+    const [values, setValues] = useState({
+        id: props.songData.song_id,
+        title: props.songData.title,
+        musician: props.songData.musician,
+        genre: props.songData.genre,
+        year: 1900,
+        price: props.songData.price,
+        quantity: props.songData.quantity,
+        urlYoutube: "",
+    });
+
+
+
+    function handleInputChange(e) {
+        const target = e.target;
+        const value = target.value;
+        const name = target.name;
+        console.log(values)
+        setValues({ ...values, [name]: value });
+    }
+
+    const [musicFile, setMusicFile] = useState("");
+    const [imageFile, setImageFile] = useState("");
+
+    function handleMusicFileChange(e) {
+        console.log(e.target.files[0]);
+
+        encodeMusicFileBase64(e.target.files[0]);
+        console.log(musicFile);
+    }
+    function handleImageFileChange(e) {
+        console.log(e.target.files[0]);
+        encodeImageFileBase64(e.target.files[0]);
+        console.log(imageFile);
+    }
+
+    const encodeMusicFileBase64 = (file) => {
+        var reader = new FileReader();
+        if (file) {
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                console.log(reader);
+                var Base64 = reader.result;
+                console.log(Base64);
+                setMusicFile(Base64);
+            };
+            reader.onerror = (error) => {
+                console.log("error: ", error);
+            };
+        }
+    };
+    const encodeImageFileBase64 = (file) => {
+        var reader = new FileReader();
+        if (file) {
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                console.log(reader);
+                var Base64 = reader.result;
+                console.log(Base64);
+                setImageFile(Base64);
+            };
+            reader.onerror = (error) => {
+                console.log("error: ", error);
+            };
+        }
+    };
+
+    const handleSubmit = ((event) => {
+        event.preventDefault()
+        console.log("connect")
+        console.log(event)
+        let formData = new FormData()
+        for (var key in values) {
+            formData.append(key, values[key]);
+        }
+        console.log(formData)
+        formData.append('musicfile', musicFile);
+        formData.append('imagefile', imageFile);
+        Axios({
+            method: "post",
+            url: "http://localhost:3001/getform",
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+        })
+            .then(function (response) {
+                //handle success
+                console.log(response);
+
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });
+        event.props.onHide();
+        setValues({
+            title: "",
+            musician: "",
+            genre: "",
+            year: 0,
+            price: 0,
+            quantity: 0,
+            urlYoutube: "",
+        });
+        history.push({ pathname: 'songs' });
+    });
+
+    return (
+        <Modal
+            className="ModalPage"
+            {...props}
+            backdrop="static"
+            keyboard={false}
+        >
+            <Modal.Header className="header">
+                <IoClose className="close" size={30} onClick={props.onHide} />
+                <Modal.Title>
+                    <h4>{props.title}</h4>
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <form onSubmit={(e) => { handleSubmit(e); props.onHide(); }}>
+                    <p>
+                        Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
+                    <input type="text" name="title" defaultValue={values.title} onChange={handleInputChange} />
+                    </p>
+                    <p>
+                        Musician&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
+                    <input type="text" name="musician" defaultValue={values.musician} onChange={handleInputChange} />
+                    </p>
+                    <p>
+                        Genre&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
+                    <input type="text" name="genre" defaultValue={values.genre} onChange={handleInputChange} />
+                    </p>
+                    <p>
+                        Year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
+                    <input type="number" min="1900" name="year" defaultValue={values.year} onChange={handleInputChange} />
+                    </p>
+                    <p>
+                        Price&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
+                    <input type="number" min="1" step="any" name="price" defaultValue={values.price} onChange={handleInputChange} />
+                    </p>
+                    <p>
+                        Quantity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
+                    <input type="number" min="0" name="quantity" defaultValue={values.quantity} onChange={handleInputChange} />
+                    </p>
+                    <p>
+                        Youtube Link&nbsp;:&nbsp;
+                    <input type="url" name="urlYoutube" defaultValue={values.urlYoutube} onChange={handleInputChange} />
+                    </p>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Song File&nbsp;:&nbsp;
+                    <input type="file"
+                            id="song"
+                            accept="audio/*"
+                            name="musicfile" defaultValue={values.musicfile} onChange={(e) => handleMusicFileChange(e)} />
+                    </p>
+                    <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Photo File&nbsp;:&nbsp;
+                    <input type="file"
+                            id="photo"
+                            accept="image/*"
+                            name="imagefile" defaultValue={values.imagefile} onChange={(e) => handleImageFileChange(e)} />
+                    </p>
+                    <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="reset" value="RESET"></input>
+                    <input type="delete" value="DELTE" onClick={(e) => { handleDelete(e); props.onHide(); }}></input>
+                </form>
+
+            </Modal.Body>
+        </Modal >
+    )
+}
+
 
 
 function SongsPage() {
@@ -93,24 +407,11 @@ function SongsPage() {
     const [searchResults, setSearchResults] = useState([]);
     // const [afterUnblobed, setAfterUnblobed] = useState(sound)
     const [badge, setBadge] = useState(afterone);
-    const [selectetdFile, setSelectedFile] = useState([]);
+    const [fileBase64String, setFileBase64String] = useState("");
+
     const handleChange = event => {
         setSearchTerm(event.target.value);
     };
-
-
-    function ImageToBase64(img, mime_type) {
-        // New Canvas
-        var canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        // Draw Image
-        var ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        // To Base64
-        return canvas.toDataURL(mime_type);
-    }
-    const [fileBase64String, setFileBase64String] = useState("");
 
     const encodeFileBase64 = (file) => {
         var reader = new FileReader();
@@ -139,105 +440,90 @@ function SongsPage() {
         );
     };
 
-
-
     useEffect(() => {
         Axios.get('http://localhost:3001/songs/get').then((response) => {
             var data = response.data;
-            // console.log(data)
             const results = data.map(song =>
                 song
             );
-
+            console.log(results)
             setSearchResults(results);
-
-            encodeFileBase64(selectetdFile[0]);
             console.log(fileBase64String);
-
-            const decodeBase64 = decodeFileBase64(
-                fileBase64String.substring(fileBase64String.indexOf(",") + 1)
-            );
-            // console.log(results[0].photo);
+            console.log(data);
             // var temp = Buffer.from(results[0].photo.data, "base64").toString('ascii');
-
-            setBadge(decodeBase64);
-            console.log(badge);
         })
     }, [])
-    const onFileChange = (e) => {
-        setSelectedFile(e.target.files);
-        console.log(e.target.files[0]);
-        console.log(e.target.files[0].name);
-        console.log(e.target.files[0].size);
-        console.log(e.target.files[0].type);
-        encodeFileBase64(e.target.files[0]);
-        console.log(fileBase64String);
 
-        const decodeBase64 = decodeFileBase64(
-            fileBase64String.substring(fileBase64String.indexOf(",") + 1)
-        );
+    const onFileChange = (e) => {
+        // setSelectedFile(e.target.files);
+        // console.log(e.target.files[0]);
+        // console.log(e.target.files[0].name);
+        // console.log(e.target.files[0].size);
+        // console.log(e.target.files[0].type);
+        // encodeFileBase64(e.target.files[0]);
+        // console.log(fileBase64String);
+
         // console.log(results[0].photo);
         // var temp = Buffer.from(results[0].photo.data, "base64").toString('ascii');
 
-        setBadge(decodeBase64);
-        console.log(badge);
-
-
     };
-    // React.useEffect(() => {
-    //     const results = SongsMockData.filter(song =>
-    //         song.title.toLocaleLowerCase().includes(searchTerm)
-    //     );
-    //     setSearchResults(results);
-    //     console.log(results)
-    // }, [searchTerm]);
+    const handleEditButton = ((paraId) => {
+        var formData1 = new FormData()
+        formData1.append('songID', 2);
+        // console.log(formData.entries)
+
+        Axios({
+            method: "GET",
+            url: "http://localhost:3001/songs/getid",
+            params: { songID: paraId },
+            headers: { "Content-Type": "multipart/form-data" },
+        })
+            .then(function (response) {
+                //handle success
+                console.log(response);
+                var data = response.data;
+                setSelectedSong(data);
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });
+    })
+
+    const [selectedSong, setSelectedSong] = useState([]);
 
     const [modalShow, setModalShow] = useState(false);
-
+    const [modalUpdateShow, setModalUpdateShow] = useState(false);
     const [isPlay, setPlay] = useState(false);
-    const [isPaues, setPause] = useState(false);
 
-    var audio = document.getElementById("myAudio");
+    const play = (param_audio) => {
+        var audio = document.getElementById('myAudio');
 
-    const play = () => {
-        audio.play();
+        var source = document.getElementById('audioSource');
+        audio.src = param_audio;
+
+        audio.play(); //call this to play the song right away
         setPlay(true);
     };
 
     const pause = () => {
+        var audio = document.getElementById('myAudio');
         audio.pause();
         setPlay(false);
     };
 
 
     const stop = () => {
+        var audio = document.getElementById('myAudio');
         audio.pause();
         audio.currentTime = 0;
         setPlay(false);
     };
 
-    // const submit = () => {
-    //     Axios.post("http://localhost:3001/testdata/insert", {
-    //         changedtitled: 'testets',
-    //     }).then(() => {
-    //         alert("successful update");
-    //     })
-    // }
-
     return (
         <React.Fragment>
             <Sidebar />
             <Topbar />
-            <input type="file"
-                id="photo"
-                accept="image/*" onChange={onFileChange} />
-            {/* <input type="file"
-                id="song"
-                accept="audio/*" onChange={onFileChange} /> */}
-            <audio id="myAudio">
-                <source src={badge} type="audio/ogg" />
-                Your browser does not support the audio element.
-            </audio>
             <div className="SongsPage">
                 <button className="UploadButton" onClick={() => setModalShow(true)}>UPLOAD</button>
                 <UploadSongPage
@@ -253,25 +539,30 @@ function SongsPage() {
                     onChange={handleChange}
                 />
                 <div className="List">
-                    <img id="output" src='./kwaiva_logo_sample.png' />
-                    <img id="imgclass" />
                     <ul>
                         {searchResults.map((song, index) => (
                             <li className="row" key={index}>
+                                <audio id="myAudio">
+                                    <source id="audioSource" src="" type="audio/ogg" />
+                                </audio>
                                 <img id="imgclass1" src={Buffer.from(song.photo.data, "base64").toString('ascii')} />
                                 <p className="title"><b>{song.title}</b><br /><a className="musician">by {song.musician}</a></p>
                                 <p className="items">Price: {song.price}<br /> Quantity: {song.quantity}</p>
                                 <p className="items">Last edited<br />{song.created_at.slice(0, 10)}</p>
-                                <button><u>EDIT</u></button>
+                                <button className="UploadButton" onClick={() => { handleEditButton(song.song_id); setModalUpdateShow(true) }}>EDIT</button>
+                                <EditSongPage
+                                    show={modalUpdateShow}
+                                    onHide={() => setModalUpdateShow(false)}
+                                    title="EDIT SONG"
+                                    songData={song}
+                                />
                                 <a className="audio">
-                                    <div className="play" onClick={() => { isPlay ? pause() : play() }}>{isPlay ? <FaPause /> : <FaPlay />}</div>
+                                    <div className="play" onClick={() => { isPlay ? pause() : play(Buffer.from(song.music.data, "base64").toString('ascii')) }}>{isPlay ? <FaPause /> : <FaPlay />}</div>
                                     <div className="stop" onClick={() => stop()}><FaStop /></div>
                                 </a>
                             </li>
                         ))}
-                        {/* <button type="button" onClick={() => submit()}>Click Me!</button> */}
                     </ul>
-
                 </div>
             </div>
         </React.Fragment>
