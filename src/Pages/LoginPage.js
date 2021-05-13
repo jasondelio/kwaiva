@@ -6,9 +6,7 @@ import LoggedInUser from "./LoggedInUser.js";
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
   const history = useHistory();
-
   const click = async () => {
     try {
       await LoggedInUser.login(username, password);

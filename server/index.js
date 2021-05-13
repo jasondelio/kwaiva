@@ -85,6 +85,39 @@ app.post('/getform', (req, res) => {
     res.send("yes")
   })
 })
+
+app.post('/song/update', (req, res) => {
+  const selectOne = "select * from TestData where title = ?; "
+  const updateSql = "UPDATE Songs SET title=?, musician=?, photo=?, music=?, price=?, quantity=?, sold_number=? WHERE song_id=?; "
+
+  const title = req.body.title;
+  const musician = req.body.musician;
+  const photo = req.body.imagefile;
+  const music = req.body.musicfile;
+  const price = req.body.price;
+  const quantity = req.body.quantity;
+  const songid = req.body.id;
+  console.log("concosossfaa server")
+  console.log(title)
+  console.log(musician)
+  // console.log(photo)
+  // console.log(music)
+  console.log(price)
+  console.log(quantity)
+  console.log(songid)
+  // connection.query(selectOne, ['testets'], (err, result) => {
+  //   console.log(err);
+  //   console.log(result);
+  //   res.send("yes")
+  // })
+  connection.query(updateSql, [title, musician, photo, music, price, quantity, quantity, songid], (err, result) => {
+    console.log(err);
+    console.log(result);
+    res.send("yes")
+  })
+})
+
+
 app.post('/deletesong', (req, res) => {
   const selectOne = "select * from Songs where song_id = ?; "
   const deleteOne = "DELETE from Songs where song_id = ?; "
