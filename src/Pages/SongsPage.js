@@ -120,7 +120,7 @@ function UploadSongPage(props) {
 
     return (
         <Modal
-            className="ModalPage"
+            className="ModalPageSong"
             {...props}
             backdrop="static"
             keyboard={false}
@@ -336,7 +336,7 @@ function EditSongPage(props) {
 
     return (
         <Modal
-            className="ModalPage"
+            className="ModalPageSong"
             {...props}
             backdrop="static"
             keyboard={false}
@@ -391,7 +391,7 @@ function EditSongPage(props) {
                     </p>
                     <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="reset" value="RESET"></input>
-                    <button onClick={(e) => { handleDelete(e); props.onHide(); }}>DELETE</button>
+                    <p><button onClick={(e) => { handleDelete(e); props.onHide(); }}>DELETE</button></p>
                 </form>
 
             </Modal.Body>

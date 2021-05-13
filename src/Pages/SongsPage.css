@@ -8,7 +8,7 @@
     overflow-y: scroll;
 }
 
-.ModalPage
+.ModalPageSong
 {
     text-align: center;
     position: fixed;
@@ -26,22 +26,23 @@
     font-family: "Playfair Display";
 }
 
-.ModalPage .header
+.ModalPageSong .header
 {
-    padding-top: 100px;
+    padding-top: 5%;
 }
 
-.ModalPage h4
+.ModalPageSong h4
 {
-    font-size: 20px;
+    font-size: 22px;
 }
-.ModalPage .close
+.ModalPageSong .close
 {
     cursor: pointer;
     position: absolute;
     right: 1%;
     top: 2%;
 }
+
 .body
 {
     background-color: white;
