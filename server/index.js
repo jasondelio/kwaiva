@@ -8,6 +8,7 @@ var multer = require('multer');
 var upload = multer({
   limits: { fieldSize: 25 * 1024 * 1024 }
 })
+const { expressCspHeader, INLINE, NONE, SELF } = require('express-csp-header');
 
 app.set('port', process.env.PORT || 3001);
 
