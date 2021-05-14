@@ -99,7 +99,7 @@ function UploadSongPage(props) {
             .then(function (response) {
                 //handle success
                 console.log(response);
-
+                history.go(0);
             })
             .catch(function (response) {
                 //handle error
@@ -115,7 +115,6 @@ function UploadSongPage(props) {
             quantity: 0,
             urlYoutube: "",
         });
-        history.push({ pathname: 'songs' });
     });
 
     return (
@@ -202,7 +201,7 @@ function EditSongPage(props) {
         }).then(function (response) {
             //handle success
             console.log(response);
-
+            history.go(0);
         }).catch(function (response) {
             //handle error
             console.log(response);
@@ -316,7 +315,7 @@ function EditSongPage(props) {
         }).then(function (response) {
             //handle success
             console.log(response);
-
+            history.go(0);
         }).catch(function (response) {
             //handle error
             console.log(response);
@@ -331,7 +330,6 @@ function EditSongPage(props) {
             quantity: 0,
             urlYoutube: "",
         });
-        history.push({ pathname: 'songs' });
     });
 
     return (
@@ -391,7 +389,7 @@ function EditSongPage(props) {
                     </p>
                     <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="reset" value="RESET"></input>
-                    <p><button onClick={(e) => { handleDelete(e); props.onHide(); }}>DELETE</button></p>
+                    <button onClick={(e) => { handleDelete(e); props.onHide(); }}>DELETE</button>
                 </form>
 
             </Modal.Body>
@@ -402,10 +400,14 @@ function EditSongPage(props) {
 function SongsPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
+    const [originResults, setOriginResults] = useState([]);
     const [modalShow, setModalShow] = useState(false);
     const [modalUpdateShow, setModalUpdateShow] = useState(false);
     const [isPlay, setPlay] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isPlayList, setPlayList] = useState([]);
     const [useId, setID] = useState(0);
+    const [iniSrcMusic, setIniSrcMusic] = useState("");
     const [selectedSong, setSelectedSong] = useState([{
         song_id: 0,
         title: "",
@@ -415,9 +417,9 @@ function SongsPage() {
         quantity: 0,
     }]);
 
-    const handleChange = event => {
-        setSearchTerm(event.target.value);
-    };
+    // const handleChange = event => {
+    //     setSearchTerm(event.target.value);
+    // };
 
     useEffect(() => {
         Axios.get('http://localhost:3001/songs/get').then((response) => {
@@ -428,9 +430,32 @@ function SongsPage() {
             // var sa = results.find((so) => so.song_id === 2)
             console.log(results)
             setSearchResults(results);
+            setOriginResults(results);
+            var createlist = []
+            for (var i = 0; i < results.length; i++) {
+                createlist.push(false);
+            }
+            setPlayList(createlist);
+            setIsLoading(false);
             // var temp = Buffer.from(results[0].photo.data, "base64").toString('ascii');
         })
     }, [])
+
+    function handleChangeSearch(e) {
+        const target = e.target;
+        const value = target.value;
+        setSearchTerm(value);
+        console.log(value)
+        if (value === "") {
+            setSearchResults(originResults);
+        }
+        else {
+            const results = originResults.filter(song =>
+                song.title.toLocaleLowerCase().includes(value)
+            );
+            setSearchResults(results);
+        }
+    }
 
     const handleEditButton = ((paraId) => {
         var formData1 = new FormData()
@@ -450,76 +475,100 @@ function SongsPage() {
         });
     })
 
-    const play = (param_audio) => {
+    const play = (param_audio, index) => {
         var audio = document.getElementById('myAudio');
         audio.src = param_audio;
         audio.play();
-        setPlay(true);
+        var createlist = []
+        for (var i = 0; i < searchResults.length; i++) {
+            createlist.push(false);
+        }
+        createlist[index] = true
+        console.log(createlist)
+        console.log(index)
+
+        setPlayList(createlist);
     };
 
-    const pause = () => {
+    const pause = (index) => {
         var audio = document.getElementById('myAudio');
         audio.pause();
-        setPlay(false);
+        // setPlay(false);
+        var createlist = []
+        for (var i = 0; i < searchResults.length; i++) {
+            createlist.push(false);
+        }
+        setPlayList(createlist)
     };
 
-    const stop = () => {
+    const stop = (index) => {
         var audio = document.getElementById('myAudio');
         audio.pause();
         audio.currentTime = 0;
-        setPlay(false);
+        var createlist = []
+        for (var i = 0; i < searchResults.length; i++) {
+            createlist.push(false);
+        }
+        console.log(createlist)
+        setPlayList(createlist)
+        // setPlay(false);
     };
 
     return (
         <React.Fragment>
             <Sidebar />
             <Topbar />
-            <div className="SongsPage">
-                <button className="UploadButton" onClick={() => setModalShow(true)}>UPLOAD</button>
-                {modalShow ? <UploadSongPage
-                    show={modalShow}
-                    onHide={() => setModalShow(false)}
-                    title="UPLOAD SONG"
-                /> : <div />}
-                <input
-                    className="SearchBar"
-                    type="search"
-                    placeholder="Search a song .."
-                    value={searchTerm}
-                    onChange={handleChange}
-                />
-                <div className="List">
-                    <ul>
-                        {searchResults.map((song, index) => (
-                            <li className="row" key={index}>
-                                <audio id="myAudio">
-                                    <source id="audioSource" src="" type="audio/ogg" />
-                                </audio>
-                                <img id="imgclass1" src={Buffer.from(song.photo.data, "base64").toString('ascii')} />
-                                <p className="title"><b>{song.title}</b><br /><a className="musician">by {song.musician}</a></p>
-                                <p className="items">Price: {song.price}<br /> Quantity: {song.quantity}</p>
-                                <p className="items">Last edited<br />{song.created_at.slice(0, 10)}</p>
-                                <button className="UploadButton" onClick={() => { setID(song.song_id); handleEditButton(song.song_id); setModalUpdateShow(true) }}>EDIT</button>
-                                {modalUpdateShow ? <EditSongPage
-                                    show={modalUpdateShow}
-                                    onHide={() => setModalUpdateShow(false)}
-                                    title="EDIT SONG"
-                                    songdata={[searchResults.find((so) => so.song_id === useId)]}
-                                    songid={index}
-                                /> : <div />}
-                                <a className="audio">
-                                    <div className="play" onClick={() => { isPlay ? pause() : play(Buffer.from(song.music.data, "base64").toString('ascii')) }}>{isPlay ? <FaPause /> : <FaPlay />}</div>
-                                    <div className="stop" onClick={() => stop()}><FaStop /></div>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
+            {isLoading ?
+                <div>
+                    <p style={{ color: "white", fontSize: "40px", textAlign: 'center' }} >LOADING....</p>
                 </div>
-            </div>
+                :
+                <div className="SongsPage">
+                    <button className="UploadButton" onClick={() => setModalShow(true)}>UPLOAD</button>
+                    {modalShow ? <UploadSongPage
+                        show={modalShow}
+                        onHide={() => setModalShow(false)}
+                        title="UPLOAD SONG"
+                    /> : <div />}
+                    <input
+                        className="SearchBar"
+                        type="search"
+                        placeholder="Search a song .."
+                        value={searchTerm}
+                        onChange={(e) => handleChangeSearch(e)}
+                    />
+                    <div className="List">
+                        <ul>
+                            {searchResults.map((song, index) => (
+                                <li className="row" key={index}>
+                                    <audio id="myAudio">
+                                        <source id="audioSource" src={iniSrcMusic} type="audio/ogg" />
+                                    </audio>
+                                    <img id="imgclass1" src={Buffer.from(song.photo.data, "base64").toString('ascii')} />
+                                    <p className="title"><b>{song.title}</b><br /><a className="musician">by {song.musician}</a></p>
+                                    <p className="items">Price: {song.price}<br /> Quantity: {song.quantity}</p>
+                                    <p className="items">Last edited<br />{song.created_at.slice(0, 10)}</p>
+                                    <button className="UploadButton" onClick={() => { setID(song.song_id); handleEditButton(song.song_id); setModalUpdateShow(true) }}>EDIT</button>
+                                    {modalUpdateShow ? <EditSongPage
+                                        show={modalUpdateShow}
+                                        onHide={() => setModalUpdateShow(false)}
+                                        title="EDIT SONG"
+                                        songdata={[searchResults.find((so) => so.song_id === useId)]}
+                                        songid={index}
+                                    /> : <div />}
+                                    <a className="audio">
+                                        <div className="play" onClick={() => { isPlayList[index] ? pause(index) : play(Buffer.from(song.music.data, "base64").toString('ascii'), index) }}>{isPlayList[index] ? <FaPause /> : <FaPlay />}</div>
+                                        <div className="stop" onClick={() => stop(index)}><FaStop /></div>
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            }
         </React.Fragment>
 
     )
 }
-
 
 export default SongsPage
