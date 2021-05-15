@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { BrowserRouter, Route, Link, Switch, Redirect, useHistory } from 'react-router-dom';
 import "./LoginPage.css";
 import LoggedInUser from "./LoggedInUser.js";
+import Axios from 'axios';
 
 function LoginPage() {
   const [username, setUsername] = useState('');
@@ -20,17 +21,38 @@ function LoginPage() {
 
   const handleVerification = (username, password) => {
     var bcrypt = require('bcryptjs');
-    const saltRounds = 10;
-    const tempPassword = 'passwordTempTempTafa';
-    var hash = bcrypt.hashSync(tempPassword, saltRounds);
-    var isValid = bcrypt.compareSync(password, hash);
-    if (isValid && username == "admin") {
-      click();
-    }
-    else {
-      //window.location.pathname = "/login"
-      alert("The username or password is incorrect.");
-    }
+    // const saltRounds = 10;
+    // username = "admin_test"
+    // const tempPassword = 'passwordTempTempTafa';
+
+    // var hash = bcrypt.hashSync(tempPassword, saltRounds);
+    // console.log(hash)
+
+    // var formData1 = new FormData()
+    // formData1.append('userName', username);
+    Axios({
+      method: "GET",
+      url: "http://localhost:3001/login/verify",
+      params: { userName: username },
+      headers: { "Content-Type": "multipart/form-data" },
+    }).then(function (response) {
+      //handle success
+      var passfrom = response.data[0].password;
+      var userfrom = response.data[0].userName;
+      var isValid = bcrypt.compareSync(password, passfrom);
+
+      if (isValid && username == userfrom) {
+        click();
+      }
+      else {
+        alert("The username or password is incorrect.");
+      }
+    }).catch(function (response) {
+      //handle error
+      console.log(response);
+    });
+
+
   };
 
   const handlerKeyPressed = (event) => {

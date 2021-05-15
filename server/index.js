@@ -40,10 +40,27 @@ connection.query('use Users;', (err) => {
   }
 })
 
+
+
 app.use(cors())
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(upload.array());
+
+
+/*Login*/
+app.get('/login/verify', (req, res) => {
+  const GET = 'select userName, password from Users where userName=?;';
+  console.log(req.query)
+  var userName = req.query.userName;
+  console.log(userName)
+  connection.query(GET, [userName], (err, result) => {
+    // console.log('result: ' + JSON.stringify(result));
+    console.log(err)
+    console.log(result)
+    res.send(result)
+  })
+})
 
 app.get('/songs/get', (req, res) => {
   connection.query('select * from Songs;', (err, result) => {
