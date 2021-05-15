@@ -10,13 +10,19 @@ var upload = multer({
 })
 const { expressCspHeader, INLINE, NONE, SELF } = require('express-csp-header');
 
-app.set('port', process.env.PORT || 3001);
+// app.set('port', process.env.PORT || 3001);
+// process.env.PORT = 3001
+// console.log(process.env.PORT)
 
-app.use(expressCspHeader({
-  directives: {
-      'script-src': [SELF, INLINE],
-  }
-}));
+// app.use(expressCspHeader({
+//   directives: {
+//     'script-src': [SELF, INLINE],
+//   }
+// }));
+
+app.listen(3001, () => {
+  console.log("running server")
+})
 
 const connection = mysql.createConnection(config);
 
@@ -156,100 +162,99 @@ app.post('/deletesong', (req, res) => {
         role: ''
     });*/
 
-    app.get('/users/get', (req, res) => {
-      connection.query('select * from Users;', (err, result) => {
-        res.send(result)
-      })
-    })
-  
-    // Get data of selected user
-    app.get('/users/getUser', (req, res) => {
-      const GET = 'select * from Users where keyId=?;';
-      var id = req.query.keyid;
-      console.log('Post a Customer: ' + JSON.stringify(req.query));
-      connection.query(GET,[id], (err, result) => {
-        console.log('result: ' + JSON.stringify(result));
-        res.send(result)
-      })
-    })
-  
-    // Get data of selected user
-    app.get('/users/getUserEmail', (req, res) => {
-      const GET = 'select * from Users where email=?;';
-      var id = req.query.email;
-      console.log('Post a Customer: ' + JSON.stringify(req.query));
-      connection.query(GET,[id], (err, result) => {
-        res.send(result)
-      })
-    })
-  
-  // INSERT statment, data = [(username, email, lastname, firstname, role)]
-  app.post('/users/insert', (req, res) => {
-    // update statment, data = [tableName, "conlumnName2 = 'NewData'", "conlumnName2 = 'OldData'"]
-    const INSERT = 'INSERT INTO Users (firstname, lastname, username, password, email, role) VALUES (?,?,?,?,?,?)';
-    var fstName = req.body.firstName;
-    var lstName = req.body.lastName;
-    var userName = req.body.userName;
-    var email = req.body.email;
-    var passwords = req.body.password;
-    var role = req.body.role;
-    console.log("%s",connection.state)
-  
-    console.log('Post a Customer: ' + JSON.stringify(req.body));
-  
-    connection.query(INSERT, [fstName,lstName,userName, passwords, email, role] , (err, result) => {
-      console.log(err);
-      console.log(result);
-      res.send(result)
-    })
+app.get('/users/get', (req, res) => {
+  connection.query('select * from Users;', (err, result) => {
+    res.send(result)
   })
-  
-  
-  app.post('/users/update', (req, res) => {
-    // update statment, data = [tableName, "conlumnName2 = 'NewData'", "targetconlumnName = 'targetValue'"]
-    const UPDATE = "UPDATE Users SET firstName = ?, lastName = ?, userName = ?,password = ?,email =?,role =? WHERE keyId = ?;"
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-    var userName = req.body.userName;
-    var email = req.body.email;
-    var password = req.body.password;
-    var role = req.body.role;
-    var keyId = req.body.keyId;
-  
-    console.log(req.body)
-  
-    connection.query(UPDATE, [firstName,lastName,userName, password, email, role, keyId], (err, result) => {
-      console.log(err);
-      console.log(result);
-      res.send(result)
-    })
+})
+
+// Get data of selected user
+app.get('/users/getUser', (req, res) => {
+  const GET = 'select * from Users where keyId=?;';
+  var id = req.query.keyid;
+  console.log('Post a Customer: ' + JSON.stringify(req.query));
+  connection.query(GET, [id], (err, result) => {
+    console.log('result: ' + JSON.stringify(result));
+    res.send(result)
   })
-  
-  app.post('/users/delete', (req, res) => {
-    // update statment, data = [tableName, "conlumnName2 = 'NewData'", "targetconlumnName = 'targetValue'"]
-    const DELETE = "DELETE from Users where keyId = ?;"
-  
-    console.log(req.body)
-  
-    connection.query(DELETE, [keyId], (err, result) => {
-      console.log(err);
-      console.log(result);
-      res.send(result)
-    })
+})
+
+// Get data of selected user
+app.get('/users/getUserEmail', (req, res) => {
+  const GET = 'select * from Users where email=?;';
+  var id = req.query.email;
+  console.log('Post a Customer: ' + JSON.stringify(req.query));
+  connection.query(GET, [id], (err, result) => {
+    res.send(result)
   })
-  
-  // catch 404 and forward to error handler
-  app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-  });
-  
-  
-  var server = app.listen(process.env.PORT, () => {
-    console.log("running server")
-    var host = server.address().address
-    var port = server.address().port
-   
-    console.log("App listening at http://%s:%s and %s", host, port, connection.state)
+})
+
+// INSERT statment, data = [(username, email, lastname, firstname, role)]
+app.post('/users/insert', (req, res) => {
+  // update statment, data = [tableName, "conlumnName2 = 'NewData'", "conlumnName2 = 'OldData'"]
+  const INSERT = 'INSERT INTO Users (firstname, lastname, username, password, email, role) VALUES (?,?,?,?,?,?)';
+  var fstName = req.body.firstName;
+  var lstName = req.body.lastName;
+  var userName = req.body.userName;
+  var email = req.body.email;
+  var passwords = req.body.password;
+  var role = req.body.role;
+  console.log("%s", connection.state)
+
+  console.log('Post a Customer: ' + JSON.stringify(req.body));
+
+  connection.query(INSERT, [fstName, lstName, userName, passwords, email, role], (err, result) => {
+    console.log(err);
+    console.log(result);
+    res.send(result)
   })
+})
+
+
+app.post('/users/update', (req, res) => {
+  // update statment, data = [tableName, "conlumnName2 = 'NewData'", "targetconlumnName = 'targetValue'"]
+  const UPDATE = "UPDATE Users SET firstName = ?, lastName = ?, userName = ?,password = ?,email =?,role =? WHERE keyId = ?;"
+  var firstName = req.body.firstName;
+  var lastName = req.body.lastName;
+  var userName = req.body.userName;
+  var email = req.body.email;
+  var password = req.body.password;
+  var role = req.body.role;
+  var keyId = req.body.keyId;
+
+  console.log(req.body)
+
+  connection.query(UPDATE, [firstName, lastName, userName, password, email, role, keyId], (err, result) => {
+    console.log(err);
+    console.log(result);
+    res.send(result)
+  })
+})
+
+app.post('/users/delete', (req, res) => {
+  // update statment, data = [tableName, "conlumnName2 = 'NewData'", "targetconlumnName = 'targetValue'"]
+  const DELETE = "DELETE from Users where keyId = ?;"
+
+  console.log(req.body)
+
+  connection.query(DELETE, [keyId], (err, result) => {
+    console.log(err);
+    console.log(result);
+    res.send(result)
+  })
+})
+
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// var server = app.listen(process.env.PORT, () => {
+//   console.log("running server")
+//   // var host = server.address().address
+//   // var port = server.address().port
+
+//   console.log("App listening at and %s", connection.state)
+// })
