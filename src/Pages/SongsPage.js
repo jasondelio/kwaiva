@@ -547,8 +547,7 @@ function SongsPage() {
                         <div className="List">
                             <ul>
                                 {searchResults.map((song, index) => (
-                                    <li className="row" key={index}>
-
+                                    <li className="row" key={index} onClick={() => { setIniSrcMusic(Buffer.from(song.music.data, "base64").toString('ascii')); handlePlay(Buffer.from(song.music.data, "base64").toString('ascii'), index) }}>
                                         <img id="imgclass1" src={Buffer.from(song.photo.data, "base64").toString('ascii')} />
                                         <p className="title"><b>{song.title}</b><br /><a className="musician">by {song.musician}</a></p>
                                         <p className="items">Price: {song.price}<br /> Quantity: {song.quantity}</p>
@@ -561,10 +560,10 @@ function SongsPage() {
                                             songdata={[searchResults.find((so) => so.song_id === useId)]}
                                             songid={index}
                                         /> : <div />}
-                                        <a className="audio">
+                                        {/* <a className="audio">
                                             <div className="play" onClick={() => { setIniSrcMusic(Buffer.from(song.music.data, "base64").toString('ascii')); handlePlay(Buffer.from(song.music.data, "base64").toString('ascii'), index) }}><FaPlay /></div>
                                             <div className="stop" onClick={() => stop(index)}><FaStop /></div>
-                                        </a>
+                                        </a> */}
                                     </li>
                                 ))}
                             </ul>
@@ -573,6 +572,7 @@ function SongsPage() {
                                     <audio controls id='myAudio' controlslist="nodownload" src={iniSrcMusic} style={{ width: "50%" }}>
                                         <source id="audioSource" type="audio/ogg" />
                                     </audio>
+                                    <div className="stop" style={{ color: "white", marginLeft: "10px" }} onClick={() => stop()}><FaStop /></div>
                                 </div>
                                 :
                                 <div />
