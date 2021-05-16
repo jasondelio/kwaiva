@@ -340,16 +340,16 @@ function EditSongPage(props) {
             keyboard={false}
         >
             <Modal.Header className="header">
-                <IoClose className="close" size={30} onClick={() => { props.onHide(); history.go(0); }} />
+                <IoClose className="close" size={30} onClick={() => { history.go(0); }} />
                 <Modal.Title>
                     <h4>{props.title}</h4>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <form onSubmit={(e) => { handleSubmit(e); props.onHide(); }}>
+                <form onSubmit={(e) => { handleSubmit(e); }}>
                     <p>
                         Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" name="title" defaultValue={values.title} onChange={handleInputChange} />
+                    <input type="text" name="title" defaultValue={values.title} onChange={(e) => handleInputChange(e)} />
                     </p>
                     <p>
                         Musician&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
@@ -389,7 +389,7 @@ function EditSongPage(props) {
                     </p>
                     <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="reset" value="RESET"></input>
-                    <button onClick={(e) => { handleDelete(e); props.onHide(); }}>DELETE</button>
+                    <button onClick={(e) => { handleDelete(e); }}>DELETE</button>
                 </form>
 
             </Modal.Body>
