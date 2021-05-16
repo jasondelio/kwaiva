@@ -238,7 +238,7 @@ function EditSongPage(props) {
         const target = e.target;
         const value = target.value;
         const name = target.name;
-        console.log(values)
+        // console.log(values)
         setValues({ ...values, [name]: value });
     }
 
@@ -340,7 +340,7 @@ function EditSongPage(props) {
             keyboard={false}
         >
             <Modal.Header className="header">
-                <IoClose className="close" size={30} onClick={() => props.onHide()} />
+                <IoClose className="close" size={30} onClick={() => { props.onHide(); history.go(0); }} />
                 <Modal.Title>
                     <h4>{props.title}</h4>
                 </Modal.Title>
@@ -429,7 +429,7 @@ function SongsPage() {
                 song
             );
             // var sa = results.find((so) => so.song_id === 2)
-            console.log(results)
+            // console.log(results)
             setSearchResults(results);
             setOriginResults(results);
             var createlist = []
@@ -569,7 +569,7 @@ function SongsPage() {
                             </ul>
                             {isShow ?
                                 <div id='myAudio1' style={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                                    <audio controls id='myAudio' controlslist="nodownload" src={iniSrcMusic} style={{ width: "50%" }}>
+                                    <audio controls id='myAudio' controlsList="nodownload" src={iniSrcMusic} style={{ width: "50%" }}>
                                         <source id="audioSource" type="audio/ogg" />
                                     </audio>
                                     <div className="stop" style={{ color: "white", marginLeft: "10px" }} onClick={() => stop()}><FaStop /></div>
