@@ -7,6 +7,24 @@ import { IoClose } from "react-icons/io5";
 import Axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
+const hashPassword = (pass) => {
+    var bcrypt = require('bcryptjs');
+    const saltRounds = 10;
+    var hash = bcrypt.hashSync(pass, saltRounds);
+
+    return hash;
+}
+
+const compareHashed = (pass, hashed) => {
+    var bcrypt = require('bcryptjs');
+    var isSame = bcrypt.compareSync(pass, hashed);
+    if (isSame) {
+        return hashed;
+    } else {
+        return hashPassword(pass);
+    }
+}
+
 function AddUserPage(props) {
     const history = useHistory();
     const [userInfo, setuserInfo] = React.useState({
@@ -43,7 +61,7 @@ function AddUserPage(props) {
         Userdata.append('lastName', userInfo.lastName);
         Userdata.append('userName', userInfo.userName);
         Userdata.append('email', userInfo.email);
-        Userdata.append('password', userInfo.password);
+        Userdata.append('password', hashPassword(userInfo.password));
         Userdata.append('role', userInfo.role);
         console.log(Userdata.get('firstName'))
         Axios({
@@ -117,6 +135,7 @@ function AddUserPage(props) {
 
 function EditUserPage(props) {
     const [selectedData, setSelectedData] = useState({
+        keyId: props.userData.keyId,
         firstName: props.userData.firstName,
         lastName: props.userData.lastName,
         userName: props.userData.userName,
@@ -125,19 +144,24 @@ function EditUserPage(props) {
         role: props.userData.role
     });
     const handleChange = (e) => {
+
         const target = e.target;
-        const value = target.value;
+        var values = target.value;
         const name = target.name;
-        if(value === null) {
-            value = `props.userData.${name}`;
+        if(values === null) {
+            values = `props.userData.${name}`;
+        } else if (name === 'password') {
+            var temp = compareHashed(values, `props.userData.${name}`);
+        console.log(temp)
+
+            values = temp;
         }
-        setSelectedData({ ...selectedData, [name]: value });
+        setSelectedData({ ...selectedData, [name]: values });
     }
     
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        // console.log(selectedData)
         let EditedUserdata = new FormData();
 
         for (var pair of EditedUserdata.entries()) {
@@ -175,7 +199,7 @@ function EditUserPage(props) {
         keyboard={false}
       >
         <Modal.Header className = "header">
-            <IoClose className = "close" size={30} onClick={props.onHide}/>
+            <IoClose className = "close" size={30} onClick={() => props.onHide()}/>
             <Modal.Title>
                 <h4>{props.title}</h4> 
             </Modal.Title>
@@ -221,6 +245,7 @@ function UsersPage() {
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [userdata, setUserData] = useState([]);
+    const [rowData, setrowData] = useState([]);
     const [modalShow, setModalShow] = useState(false);
     const [modalUpdateShow, setModalUpdateShow] = useState(false);
 
@@ -228,29 +253,6 @@ function UsersPage() {
        setSearchTerm(event.target.value);
      };
 
-    //  const handleSelection = (e) => {
-    //     var user = new FormData();
-    //     user.append('keyid', 2);
-    //     for (var pair of user.entries()) {
-    //         console.log(pair[0] + ', ' + pair[1])
-    //     }
-    //     Axios({
-    //         method: "GET",
-    //         url: "http://localhost:3001/users/getUser",
-    //         params: { keyid: e },
-    //         headers: { "Content-Type": "multipart/form-data" },
-    //     })
-    //         .then(
-    //             (res)  =>{
-    //                 var d = res.data
-    //             return setSelectedData(d);
-                
-    //         })
-    //         .catch(function (response) {
-    //             //handle error
-    //             console.log(response);
-    //         });
-    //  };
      //for getting data from db
      useEffect(() => {
         Axios.get('http://localhost:3001/users/get').then((res) => {
@@ -260,17 +262,15 @@ function UsersPage() {
             );
             setUserData(results);
         })
+
+        const results = userdata.filter(user =>
+            user.userName.toLocaleLowerCase().includes(searchTerm) ||
+            user.lastName.toLocaleLowerCase().includes(searchTerm) ||
+            user.firstName.toLocaleLowerCase().includes(searchTerm) ||
+            user.email.toLocaleLowerCase().includes(searchTerm)
+          );
+          setSearchResults(results);
     }, [userdata])
-     // for search
-    useEffect(() => {
-       const results = userdata.filter(user =>
-         user.userName.toLocaleLowerCase().includes(searchTerm) ||
-         user.lastName.toLocaleLowerCase().includes(searchTerm) ||
-         user.firstName.toLocaleLowerCase().includes(searchTerm) ||
-         user.email.toLocaleLowerCase().includes(searchTerm)
-       );
-       setSearchResults(results);
-     }, [searchResults, searchTerm, userdata]);
      
     return (
         <React.Fragment>
@@ -299,18 +299,19 @@ function UsersPage() {
                         <th>Role</th>
                     </tr>
                     {searchResults.map((user, index) =>(
-                        <tr className = "list" key = {index} onClick={() => {setModalUpdateShow(true)}}>
+                        <tr className = "list" key = {index} onClick={() => {setrowData(user); setModalUpdateShow(true)}}>
                             <td id={user.keyId} >{user.userName}</td>
                             <td id={user.keyId} >{user.email}</td>
                             <td id={user.keyId} >{user.firstName}</td>
                             <td id={user.keyId} >{user.lastName}</td>
                             <td id={user.keyId} >{user.role}</td>
-                            <EditUserPage
+                            {modalUpdateShow ? <EditUserPage
                         show={modalUpdateShow}
                         onHide={() => setModalUpdateShow(false)}
                         title = "Edit USER"
-                        userData = {user}
-                        />
+                        userData = {rowData}
+                        /> : <div />}
+                            
                         </tr>
                         
                     ))}
