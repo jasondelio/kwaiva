@@ -116,7 +116,7 @@ app.get('/testdata/insert', (req, res) => {
 
 app.post('/getform', (req, res) => {
   const selectOne = "select * from TestData where title = ?; "
-  const insertOne = "INSERT INTO Songs (title, musician, photo, music, price, quantity, sold_number)  VALUES(?, ?, ?, ?, ?, ?, ?);"
+  const insertOne = "INSERT INTO Songs (title, musician, photo, music, price, quantity, sold_number, gender, youtubelink)  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);"
 
   const title = req.body.title;
   const musician = req.body.musician;
@@ -124,13 +124,15 @@ app.post('/getform', (req, res) => {
   const music = req.body.musicfile;
   const price = req.body.price;
   const quantity = req.body.quantity;
+  const gender = req.body.genre;
+  const urlyoutube = req.body.urlYoutube;
   // console.log(music)
   // connection.query(selectOne, ['testets'], (err, result) => {
   //   console.log(err);
   //   console.log(result);
   //   res.send("yes")
   // })
-  connection.query(insertOne, [title, musician, photo, music, price, quantity, quantity], (err, result) => {
+  connection.query(insertOne, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube], (err, result) => {
     console.log(err);
     console.log(result);
     res.send("yes")
@@ -139,7 +141,7 @@ app.post('/getform', (req, res) => {
 
 app.post('/song/update', (req, res) => {
   const selectOne = "select * from TestData where title = ?; "
-  const updateSql = "UPDATE Songs SET title=?, musician=?, photo=?, music=?, price=?, quantity=?, sold_number=? WHERE song_id=?; "
+  const updateSql = "UPDATE Songs SET title=?, musician=?, photo=?, music=?, price=?, quantity=?, sold_number=?, gender=?, youtubelink=? WHERE song_id=?; "
 
   const title = req.body.title;
   const musician = req.body.musician;
@@ -147,21 +149,25 @@ app.post('/song/update', (req, res) => {
   const music = req.body.musicfile;
   const price = req.body.price;
   const quantity = req.body.quantity;
+  const gender = req.body.genre;
+  const urlyoutube = req.body.urlYoutube;
+
   const songid = req.body.id;
-  console.log("concosossfaa server")
-  console.log(title)
-  console.log(musician)
+
+  // console.log("concosossfaa server")
+  // console.log(title)
+  // console.log(musician)
   // console.log(photo)
   // console.log(music)
-  console.log(price)
-  console.log(quantity)
-  console.log(songid)
+  // console.log(price)
+  // console.log(quantity)
+  // console.log(songid)
   // connection.query(selectOne, ['testets'], (err, result) => {
   //   console.log(err);
   //   console.log(result);
   //   res.send("yes")
   // })
-  connection.query(updateSql, [title, musician, photo, music, price, quantity, quantity, songid], (err, result) => {
+  connection.query(updateSql, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube, songid], (err, result) => {
     console.log(err);
     console.log(result);
     res.send("yes")
