@@ -51,14 +51,33 @@ app.use(upload.array());
 /*Login*/
 app.get('/login/verify', (req, res) => {
   const GET = 'select userName, password, role from Users where userName=?;';
-  console.log(req.query)
+  var bcrypt = require('bcryptjs');
+
   var userName = req.query.userName;
-  console.log(userName)
+  var passWord = req.query.password;
+
   connection.query(GET, [userName], (err, result) => {
-    // console.log('result: ' + JSON.stringify(result));
-    console.log(err)
-    console.log(result)
-    res.send(result)
+    if (err != null) {
+      res.send("No")
+    }
+    else if (result.length === 0) {
+      res.send("No")
+    }
+    else {
+      var passfrom = result[0]["password"];
+      var userfrom = result[0]["userName"];
+      var role = result[0]["role"];
+      var isValid = bcrypt.compareSync(passWord, passfrom);
+      // console.log(passfrom)
+      // console.log(passWord)
+      // console.log(isValid)
+      if (isValid && userName == userfrom && role == "admin") {
+        res.send("Yes")
+      }
+      else {
+        res.send("No")
+      }
+    }
   })
 })
 

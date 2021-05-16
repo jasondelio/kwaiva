@@ -20,28 +20,15 @@ function LoginPage() {
 
 
   const handleVerification = (username, password) => {
-    var bcrypt = require('bcryptjs');
-    const saltRounds = 10;
-    // username = "admin_test"
-    // const tempPassword = 'passwordTempTempTafa';
-
-    // var hash = bcrypt.hashSync(password, saltRounds);
-    // console.log(hash)
-
-    // var formData1 = new FormData()
-    // formData1.append('userName', username);
     Axios({
       method: "GET",
       url: "http://localhost:3001/login/verify",
-      params: { userName: username },
+      params: { userName: username, password: password },
       headers: { "Content-Type": "multipart/form-data" },
     }).then(function (response) {
       //handle success
-      var passfrom = response.data[0].password;
-      var userfrom = response.data[0].userName;
-      var role = response.data[0].role;
-      var isValid = bcrypt.compareSync(password, passfrom);
-      if (isValid && username == userfrom && role == "admin") {
+      var isValid = response.data;
+      if (isValid == "Yes") {
         click();
       }
       else {
