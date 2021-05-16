@@ -50,7 +50,7 @@ app.use(upload.array());
 
 /*Login*/
 app.get('/login/verify', (req, res) => {
-  const GET = 'select userName, password from Users where userName=?;';
+  const GET = 'select userName, password, role from Users where userName=?;';
   console.log(req.query)
   var userName = req.query.userName;
   console.log(userName)

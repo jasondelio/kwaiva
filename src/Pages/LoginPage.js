@@ -21,11 +21,11 @@ function LoginPage() {
 
   const handleVerification = (username, password) => {
     var bcrypt = require('bcryptjs');
-    // const saltRounds = 10;
+    const saltRounds = 10;
     // username = "admin_test"
     // const tempPassword = 'passwordTempTempTafa';
 
-    // var hash = bcrypt.hashSync(tempPassword, saltRounds);
+    // var hash = bcrypt.hashSync(password, saltRounds);
     // console.log(hash)
 
     // var formData1 = new FormData()
@@ -39,9 +39,9 @@ function LoginPage() {
       //handle success
       var passfrom = response.data[0].password;
       var userfrom = response.data[0].userName;
+      var role = response.data[0].role;
       var isValid = bcrypt.compareSync(password, passfrom);
-
-      if (isValid && username == userfrom) {
+      if (isValid && username == userfrom && role == "admin") {
         click();
       }
       else {
@@ -51,8 +51,6 @@ function LoginPage() {
       //handle error
       console.log(response);
     });
-
-
   };
 
   const handlerKeyPressed = (event) => {
