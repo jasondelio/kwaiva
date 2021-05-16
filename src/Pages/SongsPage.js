@@ -53,9 +53,7 @@ function UploadSongPage(props) {
         if (file) {
             reader.readAsDataURL(file);
             reader.onload = () => {
-                console.log(reader);
                 var Base64 = reader.result;
-                console.log(Base64);
                 setMusicFile(Base64);
             };
             reader.onerror = (error) => {
@@ -68,9 +66,7 @@ function UploadSongPage(props) {
         if (file) {
             reader.readAsDataURL(file);
             reader.onload = () => {
-                console.log(reader);
                 var Base64 = reader.result;
-                console.log(Base64);
                 setImageFile(Base64);
             };
             reader.onerror = (error) => {
@@ -87,7 +83,6 @@ function UploadSongPage(props) {
         for (var key in values) {
             formData.append(key, values[key]);
         }
-        console.log(formData)
         formData.append('musicfile', musicFile);
         formData.append('imagefile', imageFile);
         Axios({
@@ -227,11 +222,11 @@ function EditSongPage(props) {
         id: props.songdata[0].song_id,
         title: props.songdata[0].title,
         musician: props.songdata[0].musician,
-        genre: "",
+        genre: props.songdata[0].gender,
         year: parseInt(props.songdata[0].created_at.slice(0, 4)),
         price: props.songdata[0].price,
         quantity: props.songdata[0].quantity,
-        urlYoutube: "",
+        urlYoutube: props.songdata[0].youtubelink,
     });
 
     function handleInputChange(e) {
@@ -246,15 +241,10 @@ function EditSongPage(props) {
     const [imageFile, setImageFile] = useState(Buffer.from(props.songdata[0].photo, "base64").toString('ascii'));
 
     function handleMusicFileChange(e) {
-        console.log(e.target.files[0]);
-
         encodeMusicFileBase64(e.target.files[0]);
-        console.log(musicFile);
     }
     function handleImageFileChange(e) {
-        console.log(e.target.files[0]);
         encodeImageFileBase64(e.target.files[0]);
-        console.log(imageFile);
     }
 
     const encodeMusicFileBase64 = (file) => {
@@ -262,9 +252,7 @@ function EditSongPage(props) {
         if (file) {
             reader.readAsDataURL(file);
             reader.onload = () => {
-                console.log(reader);
                 var Base64 = reader.result;
-                console.log(Base64);
                 setMusicFile(Base64);
             };
             reader.onerror = (error) => {
@@ -277,9 +265,7 @@ function EditSongPage(props) {
         if (file) {
             reader.readAsDataURL(file);
             reader.onload = () => {
-                console.log(reader);
                 var Base64 = reader.result;
-                console.log(Base64);
                 setImageFile(Base64);
             };
             reader.onerror = (error) => {
@@ -373,7 +359,7 @@ function EditSongPage(props) {
                     </p>
                     <p>
                         Youtube Link&nbsp;:&nbsp;
-                    <input type="url" name="urlYoutube" defaultValue={values.url} onChange={(e) => handleInputChange(e)} />
+                    <input type="url" name="urlYoutube" defaultValue={values.urlYoutube} onChange={(e) => handleInputChange(e)} />
                     </p>
                     <p>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Song File&nbsp;:&nbsp;
