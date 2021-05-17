@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal'
 import { IoClose } from "react-icons/io5";
 import Axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import { CgSmileNone } from 'react-icons/cg';
 
 const hashPassword = (pass) => {
     var bcrypt = require('bcryptjs');
@@ -248,10 +249,28 @@ function UsersPage() {
     const [rowData, setrowData] = useState([]);
     const [modalShow, setModalShow] = useState(false);
     const [modalUpdateShow, setModalUpdateShow] = useState(false);
+    const [sortTarget, setSortTarget] = useState("");
+    const [sortToggle, setsortToggle] = useState(1);
 
     const handleChange = event => {
        setSearchTerm(event.target.value);
      };
+
+    //  function compareBy(key) {
+    //     return function (a, b) {
+    //       if (a[key] < b[key]) return -1;
+    //       if (a[key] > b[key]) return 1;
+    //       return 0;
+    //     };
+    // a[target].localeCompare(b[target])
+    //   }
+
+     const handleSort = (e, target) => {
+        setsortToggle(sortToggle + 1);
+        console.log(sortToggle)
+        setSortTarget(target);
+        
+     }
 
      //for getting data from db
      useEffect(() => {
@@ -269,7 +288,16 @@ function UsersPage() {
             user.firstName.toLocaleLowerCase().includes(searchTerm) ||
             user.email.toLocaleLowerCase().includes(searchTerm)
           );
+
           setSearchResults(results);
+
+          if (sortToggle % 2 === 0) {
+           var result = searchResults.sort((a,b) => a[sortTarget] < b[sortTarget]  ? 1 : - 1 );
+          setSearchResults(result);
+
+          }
+
+          
     }, [userdata])
      
     return (
@@ -292,11 +320,11 @@ function UsersPage() {
                 />
                 <table cellSpacing = "0" cellPadding = "0">
                     <tr className = "header">
-                        <th className = "username">Username</th>
-                        <th>Email Address</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Role</th>
+                        <th><button onClick={(e) => handleSort(e, 'userName')} style={{background: 'none', border:'none'}}>Username</button></th>
+                        <th><button onClick={(e) => handleSort(e, 'email')} style={{background: 'none', border:'none'}}>Email Address</button></th>
+                        <th><button onClick={(e) => handleSort(e, 'firstName')} style={{background: 'none', border:'none'}}>First Name</button></th>
+                        <th><button onClick={(e) => handleSort(e, 'lastName')} style={{background: 'none', border:'none'}}>Last Name</button></th>
+                        <th><button onClick={(e) => handleSort(e, 'role')} style={{background: 'none', border:'none'}}>Role</button></th>
                     </tr>
                     {searchResults.map((user, index) =>(
                         <tr className = "list" key = {index} onClick={() => {setrowData(user); setModalUpdateShow(true)}}>
