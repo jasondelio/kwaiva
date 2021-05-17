@@ -375,7 +375,7 @@ function EditSongPage(props) {
                     </p>
                     <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="reset" value="RESET"></input>
-                    <button onClick={(e) => { handleDelete(e); }}>DELETE</button>
+                    <p><button onClick={(e) => { handleDelete(e); }}>DELETE</button></p>
                 </form>
 
             </Modal.Body>
@@ -554,11 +554,11 @@ function SongsPage() {
                                 ))}
                             </ul>
                             {isShow ?
-                                <div id='myAudio1' style={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                <div className='audioplayer'>
                                     <audio controls id='myAudio' controlsList="nodownload" src={iniSrcMusic} style={{ width: "50%" }}>
                                         <source id="audioSource" type="audio/ogg" />
                                     </audio>
-                                    <div className="stop" style={{ color: "white", marginLeft: "10px" }} onClick={() => stop()}><FaStop /></div>
+                                    <div className="stop" onClick={() => stop()}><IoClose /></div>
                                 </div>
                                 :
                                 <div />
