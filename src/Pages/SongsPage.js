@@ -94,7 +94,6 @@ function UploadSongPage(props) {
             .then(function (response) {
                 //handle success
                 console.log(response);
-                history.go(0);
             })
             .catch(function (response) {
                 //handle error
