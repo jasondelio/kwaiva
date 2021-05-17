@@ -53,9 +53,7 @@ function UploadSongPage(props) {
         if (file) {
             reader.readAsDataURL(file);
             reader.onload = () => {
-                console.log(reader);
                 var Base64 = reader.result;
-                console.log(Base64);
                 setMusicFile(Base64);
             };
             reader.onerror = (error) => {
@@ -68,9 +66,7 @@ function UploadSongPage(props) {
         if (file) {
             reader.readAsDataURL(file);
             reader.onload = () => {
-                console.log(reader);
                 var Base64 = reader.result;
-                console.log(Base64);
                 setImageFile(Base64);
             };
             reader.onerror = (error) => {
@@ -87,7 +83,6 @@ function UploadSongPage(props) {
         for (var key in values) {
             formData.append(key, values[key]);
         }
-        console.log(formData)
         formData.append('musicfile', musicFile);
         formData.append('imagefile', imageFile);
         Axios({
@@ -227,18 +222,18 @@ function EditSongPage(props) {
         id: props.songdata[0].song_id,
         title: props.songdata[0].title,
         musician: props.songdata[0].musician,
-        genre: "",
+        genre: props.songdata[0].gender,
         year: parseInt(props.songdata[0].created_at.slice(0, 4)),
         price: props.songdata[0].price,
         quantity: props.songdata[0].quantity,
-        urlYoutube: "",
+        urlYoutube: props.songdata[0].youtubelink,
     });
 
     function handleInputChange(e) {
         const target = e.target;
         const value = target.value;
         const name = target.name;
-        console.log(values)
+        // console.log(values)
         setValues({ ...values, [name]: value });
     }
 
@@ -246,15 +241,10 @@ function EditSongPage(props) {
     const [imageFile, setImageFile] = useState(Buffer.from(props.songdata[0].photo, "base64").toString('ascii'));
 
     function handleMusicFileChange(e) {
-        console.log(e.target.files[0]);
-
         encodeMusicFileBase64(e.target.files[0]);
-        console.log(musicFile);
     }
     function handleImageFileChange(e) {
-        console.log(e.target.files[0]);
         encodeImageFileBase64(e.target.files[0]);
-        console.log(imageFile);
     }
 
     const encodeMusicFileBase64 = (file) => {
@@ -262,9 +252,7 @@ function EditSongPage(props) {
         if (file) {
             reader.readAsDataURL(file);
             reader.onload = () => {
-                console.log(reader);
                 var Base64 = reader.result;
-                console.log(Base64);
                 setMusicFile(Base64);
             };
             reader.onerror = (error) => {
@@ -277,9 +265,7 @@ function EditSongPage(props) {
         if (file) {
             reader.readAsDataURL(file);
             reader.onload = () => {
-                console.log(reader);
                 var Base64 = reader.result;
-                console.log(Base64);
                 setImageFile(Base64);
             };
             reader.onerror = (error) => {
@@ -340,16 +326,16 @@ function EditSongPage(props) {
             keyboard={false}
         >
             <Modal.Header className="header">
-                <IoClose className="close" size={30} onClick={() => props.onHide()} />
+                <IoClose className="close" size={30} onClick={() => { history.go(0); }} />
                 <Modal.Title>
                     <h4>{props.title}</h4>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <form onSubmit={(e) => { handleSubmit(e); props.onHide(); }}>
+                <form onSubmit={(e) => { handleSubmit(e); }}>
                     <p>
                         Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" name="title" defaultValue={values.title} onChange={handleInputChange} />
+                    <input type="text" name="title" defaultValue={values.title} onChange={(e) => handleInputChange(e)} />
                     </p>
                     <p>
                         Musician&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
@@ -373,7 +359,7 @@ function EditSongPage(props) {
                     </p>
                     <p>
                         Youtube Link&nbsp;:&nbsp;
-                    <input type="url" name="urlYoutube" defaultValue={values.url} onChange={(e) => handleInputChange(e)} />
+                    <input type="url" name="urlYoutube" defaultValue={values.urlYoutube} onChange={(e) => handleInputChange(e)} />
                     </p>
                     <p>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Song File&nbsp;:&nbsp;
@@ -389,7 +375,7 @@ function EditSongPage(props) {
                     </p>
                     <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="reset" value="RESET"></input>
-                    <button onClick={(e) => { handleDelete(e); props.onHide(); }}>DELETE</button>
+                    <button onClick={(e) => { handleDelete(e); }}>DELETE</button>
                 </form>
 
             </Modal.Body>
@@ -429,7 +415,7 @@ function SongsPage() {
                 song
             );
             // var sa = results.find((so) => so.song_id === 2)
-            console.log(results)
+            // console.log(results)
             setSearchResults(results);
             setOriginResults(results);
             var createlist = []
@@ -569,7 +555,7 @@ function SongsPage() {
                             </ul>
                             {isShow ?
                                 <div id='myAudio1' style={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
-                                    <audio controls id='myAudio' controlslist="nodownload" src={iniSrcMusic} style={{ width: "50%" }}>
+                                    <audio controls id='myAudio' controlsList="nodownload" src={iniSrcMusic} style={{ width: "50%" }}>
                                         <source id="audioSource" type="audio/ogg" />
                                     </audio>
                                     <div className="stop" style={{ color: "white", marginLeft: "10px" }} onClick={() => stop()}><FaStop /></div>
