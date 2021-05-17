@@ -92,6 +92,11 @@
     line-height: 5vh;
 }
 
+.UsersPage th
+{
+    cursor: pointer;
+}
+
 .UsersPage .list
 {
     cursor: pointer;

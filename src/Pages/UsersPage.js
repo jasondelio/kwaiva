@@ -320,11 +320,11 @@ function UsersPage() {
                 />
                 <table cellSpacing = "0" cellPadding = "0">
                     <tr className = "header">
-                        <th><button onClick={(e) => handleSort(e, 'userName')} style={{background: 'none', border:'none'}}>Username</button></th>
-                        <th><button onClick={(e) => handleSort(e, 'email')} style={{background: 'none', border:'none'}}>Email Address</button></th>
-                        <th><button onClick={(e) => handleSort(e, 'firstName')} style={{background: 'none', border:'none'}}>First Name</button></th>
-                        <th><button onClick={(e) => handleSort(e, 'lastName')} style={{background: 'none', border:'none'}}>Last Name</button></th>
-                        <th><button onClick={(e) => handleSort(e, 'role')} style={{background: 'none', border:'none'}}>Role</button></th>
+                        <th onClick={(e) => handleSort(e, 'userName')}>Username</th>
+                        <th onClick={(e) => handleSort(e, 'email')}>Email Address</th>
+                        <th onClick={(e) => handleSort(e, 'firstName')}>First Name</th>
+                        <th onClick={(e) => handleSort(e, 'lastName')}>Last name</th>
+                        <th onClick={(e) => handleSort(e, 'role')}>Role</th>
                     </tr>
                     {searchResults.map((user, index) =>(
                         <tr className = "list" key = {index} onClick={() => {setrowData(user); setModalUpdateShow(true)}}>
@@ -340,7 +340,7 @@ function UsersPage() {
                         userData = {rowData}
                         /> : <div />}
                             
-                        </tr>
+                        </tr> 
                         
                     ))}
                     
