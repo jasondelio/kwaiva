@@ -94,6 +94,7 @@ function UploadSongPage(props) {
             .then(function (response) {
                 //handle success
                 console.log(response);
+                history.go(0);
             })
             .catch(function (response) {
                 //handle error
@@ -221,7 +222,7 @@ function EditSongPage(props) {
         id: props.songdata[0].song_id,
         title: props.songdata[0].title,
         musician: props.songdata[0].musician,
-        genre: props.songdata[0].gender,
+        genre: props.songdata[0].genre,
         year: parseInt(props.songdata[0].created_at.slice(0, 4)),
         price: props.songdata[0].price,
         quantity: props.songdata[0].quantity,
@@ -374,7 +375,7 @@ function EditSongPage(props) {
                     </p>
                     <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="reset" value="RESET"></input>
-                    <button onClick={(e) => { handleDelete(e); }}>DELETE</button>
+                    <p><button onClick={(e) => { handleDelete(e); }}>DELETE</button></p>
                 </form>
 
             </Modal.Body>
@@ -553,11 +554,11 @@ function SongsPage() {
                                 ))}
                             </ul>
                             {isShow ?
-                                <div id='myAudio1' style={{ display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                                <div className='audioplayer'>
                                     <audio controls id='myAudio' controlsList="nodownload" src={iniSrcMusic} style={{ width: "50%" }}>
                                         <source id="audioSource" type="audio/ogg" />
                                     </audio>
-                                    <div className="stop" style={{ color: "white", marginLeft: "10px" }} onClick={() => stop()}><FaStop /></div>
+                                    <div className="stop" onClick={() => stop()}><IoClose /></div>
                                 </div>
                                 :
                                 <div />

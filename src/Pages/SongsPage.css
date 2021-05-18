@@ -94,7 +94,8 @@
     color: white;
     margin-bottom: 5%;
     background-color: #696969;
-    display: flex; 
+    display: flex;
+    cursor: pointer; 
 }
 
 .List img
@@ -142,7 +143,16 @@
 .stop
 {
     cursor: pointer;
-    font-size: 1.2vw;
+    font-size: 1.3vw;
+    color: white;
+    margin-left: 0.8%;
+    margin-top: 1.5%;
+}
+
+.audioplayer
+{
+    display: flex;
+    margin-left: 25%;
 }
 
 .List .title
