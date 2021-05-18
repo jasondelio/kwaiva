@@ -19,7 +19,7 @@ function UploadSongPage(props) {
         title: "",
         musician: "",
         genre: "",
-        year: 0,
+        year: 1900,
         price: 0,
         quantity: 0,
         urlYoutube: "",
@@ -29,7 +29,6 @@ function UploadSongPage(props) {
         const target = e.target;
         const value = target.value;
         const name = target.name;
-        console.log(values)
         setValues({ ...values, [name]: value });
     }
 
@@ -37,15 +36,10 @@ function UploadSongPage(props) {
     const [imageFile, setImageFile] = useState("");
 
     function handleMusicFileChange(e) {
-        console.log(e.target.files[0]);
-
         encodeMusicFileBase64(e.target.files[0]);
-        console.log(musicFile);
     }
     function handleImageFileChange(e) {
-        console.log(e.target.files[0]);
         encodeImageFileBase64(e.target.files[0]);
-        console.log(imageFile);
     }
 
     const encodeMusicFileBase64 = (file) => {
@@ -61,6 +55,7 @@ function UploadSongPage(props) {
             };
         }
     };
+
     const encodeImageFileBase64 = (file) => {
         var reader = new FileReader();
         if (file) {
@@ -78,38 +73,40 @@ function UploadSongPage(props) {
     const handleSubmit = ((event) => {
         event.preventDefault()
         console.log("connect")
-        console.log(event)
         let formData = new FormData()
         for (var key in values) {
             formData.append(key, values[key]);
         }
         formData.append('musicfile', musicFile);
         formData.append('imagefile', imageFile);
-        Axios({
-            method: "post",
-            url: "http://localhost:3001/getform",
-            data: formData,
-            headers: { "Content-Type": "multipart/form-data" },
-        })
-            .then(function (response) {
-                //handle success
+
+        var userConfirmation = window.confirm("Do you really want to update with this song?");
+        console.log(userConfirmation);
+
+        if (userConfirmation) {
+            Axios({
+                method: "post",
+                url: "http://localhost:3001/getform",
+                data: formData,
+                headers: { "Content-Type": "multipart/form-data" },
+            }).then(function (response) {
                 console.log(response);
                 history.go(0);
-            })
-            .catch(function (response) {
-                //handle error
+                event.props.onHide();
+
+                setValues({
+                    title: "",
+                    musician: "",
+                    genre: "",
+                    year: 1900,
+                    price: 0,
+                    quantity: 0,
+                    urlYoutube: "",
+                });
+            }).catch(function (response) {
                 console.log(response);
             });
-        // event.props.onHide();
-        setValues({
-            title: "",
-            musician: "",
-            genre: "",
-            year: 0,
-            price: 0,
-            quantity: 0,
-            urlYoutube: "",
-        });
+        }
     });
 
     return (
@@ -126,18 +123,18 @@ function UploadSongPage(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <form onSubmit={(e) => { handleSubmit(e); props.onHide(); }}>
+                <form onSubmit={(e) => { handleSubmit(e); }}>
                     <p>
                         Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" name="title" defaultValue={values.title} onChange={handleInputChange} />
+                    <input type="text" name="title" required="required" defaultValue={values.title} onChange={handleInputChange} />
                     </p>
                     <p>
                         Musician&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" name="musician" defaultValue={values.musician} onChange={handleInputChange} />
+                    <input type="text" name="musician" required="required" defaultValue={values.musician} onChange={handleInputChange} />
                     </p>
                     <p>
                         Genre&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" name="genre" defaultValue={values.genre} onChange={handleInputChange} />
+                    <input type="text" name="genre" required="required" defaultValue={values.genre} onChange={handleInputChange} />
                     </p>
                     <p>
                         Year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
@@ -153,19 +150,21 @@ function UploadSongPage(props) {
                     </p>
                     <p>
                         Youtube Link&nbsp;:&nbsp;
-                    <input type="url" name="urlYoutube" defaultValue={values.urlYoutube} onChange={handleInputChange} />
+                    <input type="url" name="urlYoutube" required="required" defaultValue={values.urlYoutube} onChange={handleInputChange} />
                     </p>
                     <p>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Song File&nbsp;:&nbsp;
                     <input type="file"
                             id="song"
                             accept="audio/*"
+                            required="required"
                             name="musicfile" defaultValue={values.musicfile} onChange={(e) => handleMusicFileChange(e)} />
                     </p>
                     <p>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Photo File&nbsp;:&nbsp;
                     <input type="file"
                             id="photo"
+                            required="required"
                             accept="image/*"
                             name="imagefile" defaultValue={values.imagefile} onChange={(e) => handleImageFileChange(e)} />
                     </p>
@@ -184,35 +183,36 @@ function EditSongPage(props) {
     const handleDelete = ((event) => {
         event.preventDefault()
         console.log("handle delete")
-        console.log(event)
         let formData = new FormData()
         formData.append('song_id', props.songdata[0].song_id);
-        console.log(formData.entries().next())
-        Axios({
-            method: "post",
-            url: "http://localhost:3001/deletesong",
-            data: formData,
-            headers: { "Content-Type": "multipart/form-data" },
-        }).then(function (response) {
-            //handle success
-            console.log(response);
-            history.go(0);
-        }).catch(function (response) {
-            //handle error
-            console.log(response);
-        });
-        // event.props.onHide();
-        setValues({
-            id: 0,
-            title: "",
-            musician: "",
-            genre: "",
-            year: 0,
-            price: 0,
-            quantity: 0,
-            urlYoutube: "",
-        });
-        history.push({ pathname: 'songs' });
+
+        var userConfirmation = window.confirm("Do you really want to delete this song?");
+
+        if (userConfirmation) {
+            Axios({
+                method: "post",
+                url: "http://localhost:3001/deletesong",
+                data: formData,
+                headers: { "Content-Type": "multipart/form-data" },
+            }).then(function (response) {
+                //handle success
+                console.log(response);
+                history.go(0);
+                setValues({
+                    id: 0,
+                    title: "",
+                    musician: "",
+                    genre: "",
+                    year: 1900,
+                    price: 0,
+                    quantity: 0,
+                    urlYoutube: "",
+                });
+            }).catch(function (response) {
+                //handle error
+                console.log(response);
+            });
+        }
     });
     // console.log("Child");
     // console.log(props.songid)
@@ -223,7 +223,7 @@ function EditSongPage(props) {
         title: props.songdata[0].title,
         musician: props.songdata[0].musician,
         genre: props.songdata[0].genre,
-        year: parseInt(props.songdata[0].created_at.slice(0, 4)),
+        year: props.songdata[0].release_year,
         price: props.songdata[0].price,
         quantity: props.songdata[0].quantity,
         urlYoutube: props.songdata[0].youtubelink,
@@ -293,29 +293,32 @@ function EditSongPage(props) {
         formData.append('musicfile', musicFile);
         formData.append('imagefile', imageFile);
 
-        Axios({
-            method: "post",
-            url: "http://localhost:3001/song/update",
-            data: formData,
-            headers: { "Content-Type": "multipart/form-data" },
-        }).then(function (response) {
-            //handle success
-            console.log(response);
-            history.go(0);
-        }).catch(function (response) {
-            //handle error
-            console.log(response);
-        });
+        var userConfirmation = window.confirm("Do you really want to update this song?");
 
-        setValues({
-            title: "",
-            musician: "",
-            genre: "",
-            year: 0,
-            price: 0,
-            quantity: 0,
-            urlYoutube: "",
-        });
+        if (userConfirmation) {
+            Axios({
+                method: "post",
+                url: "http://localhost:3001/song/update",
+                data: formData,
+                headers: { "Content-Type": "multipart/form-data" },
+            }).then(function (response) {
+                //handle success
+                console.log(response);
+                history.go(0);
+                setValues({
+                    title: "",
+                    musician: "",
+                    genre: "",
+                    year: 1900,
+                    price: 0,
+                    quantity: 0,
+                    urlYoutube: "",
+                });
+            }).catch(function (response) {
+                //handle error
+                console.log(response);
+            });
+        }
     });
 
     return (
@@ -335,43 +338,45 @@ function EditSongPage(props) {
                 <form onSubmit={(e) => { handleSubmit(e); }}>
                     <p>
                         Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" name="title" defaultValue={values.title} onChange={(e) => handleInputChange(e)} />
+                    <input type="text" name="title" defaultValue={values.title} required="required" onChange={(e) => handleInputChange(e)} />
                     </p>
                     <p>
                         Musician&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" name="musician" defaultValue={values.musician} onChange={handleInputChange} />
+                    <input type="text" name="musician" defaultValue={values.musician} required="required" onChange={handleInputChange} />
                     </p>
                     <p>
                         Genre&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="text" name="genre" defaultValue={values.genre} onChange={handleInputChange} />
+                    <input type="text" name="genre" defaultValue={values.genre} required="required" onChange={handleInputChange} />
                     </p>
                     <p>
                         Year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="number" min="1900" name="year" defaultValue={values.year} onChange={handleInputChange} />
+                    <input type="number" min="1900" name="year" defaultValue={values.year} required="required" onChange={handleInputChange} />
                     </p>
                     <p>
                         Price&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="number" min="1" step="any" name="price" defaultValue={values.price} onChange={handleInputChange} />
+                    <input type="number" min="1" step="any" name="price" defaultValue={values.price} required="required" onChange={handleInputChange} />
                     </p>
                     <p>
                         Quantity&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
-                    <input type="number" min="0" name="quantity" defaultValue={values.quantity} onChange={handleInputChange} />
+                    <input type="number" min="0" name="quantity" defaultValue={values.quantity} required="required" onChange={handleInputChange} />
                     </p>
                     <p>
                         Youtube Link&nbsp;:&nbsp;
-                    <input type="url" name="urlYoutube" defaultValue={values.urlYoutube} onChange={(e) => handleInputChange(e)} />
+                    <input type="url" name="urlYoutube" defaultValue={values.urlYoutube} required="required" onChange={(e) => handleInputChange(e)} />
                     </p>
                     <p>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Song File&nbsp;:&nbsp;
                     <input type="file"
                             accept="audio/*"
-                            name="musicfile" onChange={(e) => handleMusicFileChange(e)} />
+                            name="musicfile"
+                            onChange={(e) => handleMusicFileChange(e)} />
                     </p>
                     <p>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Photo File&nbsp;:&nbsp;
                     <input type="file"
                             accept="image/*"
-                            name="imagefile" onChange={(e) => handleImageFileChange(e)} />
+                            name="imagefile"
+                            onChange={(e) => handleImageFileChange(e)} />
                     </p>
                     <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="reset" value="RESET"></input>
@@ -537,7 +542,7 @@ function SongsPage() {
                                         <img id="imgclass1" src={Buffer.from(song.photo.data, "base64").toString('ascii')} />
                                         <p className="title"><b>{song.title}</b><br /><a className="musician">by {song.musician}</a></p>
                                         <p className="items">Price: {song.price}<br /> Quantity: {song.quantity}</p>
-                                        <p className="items">Last edited<br />{song.created_at.slice(0, 10)}</p>
+                                        <p className="items">Last edited<br />{song.created_at}</p>
                                         <button className="UploadButton" onClick={() => { setID(song.song_id); handleEditButton(song.song_id); setModalUpdateShow(true) }}>EDIT</button>
                                         {modalUpdateShow ? <EditSongPage
                                             show={modalUpdateShow}
