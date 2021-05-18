@@ -82,7 +82,12 @@ app.get('/login/verify', (req, res) => {
 })
 
 app.get('/songs/get', (req, res) => {
+  // var a = Convert(Date, "2021-05-17T17:13:43.000Z")
+  // Console.log(a)
   connection.query('select * from Songs;', (err, result) => {
+    console.log(result[1]["created_at"]);
+    var resulttime = result[1]["created_at"].toLocaleDateString('en-AU', { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(',', '').replace('/', '');
+    console.log(resulttime);
     res.send(result)
   })
 })
@@ -116,7 +121,7 @@ app.get('/testdata/insert', (req, res) => {
 
 app.post('/getform', (req, res) => {
   const selectOne = "select * from TestData where title = ?; "
-  const insertOne = "INSERT INTO Songs (title, musician, photo, music, price, quantity, sold_number, gender, youtubelink)  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);"
+  const insertOne = "INSERT INTO Songs (title, musician, photo, music, price, quantity, sold_number, genre, youtubelink)  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);"
 
   const title = req.body.title;
   const musician = req.body.musician;
@@ -141,7 +146,7 @@ app.post('/getform', (req, res) => {
 
 app.post('/song/update', (req, res) => {
   const selectOne = "select * from TestData where title = ?; "
-  const updateSql = "UPDATE Songs SET title=?, musician=?, photo=?, music=?, price=?, quantity=?, sold_number=?, gender=?, youtubelink=? WHERE song_id=?; "
+  const updateSql = "UPDATE Songs SET title=?, musician=?, photo=?, music=?, price=?, quantity=?, sold_number=?, genre=?, youtubelink=? WHERE song_id=?; "
 
   const title = req.body.title;
   const musician = req.body.musician;

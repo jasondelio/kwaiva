@@ -94,6 +94,7 @@ function UploadSongPage(props) {
             .then(function (response) {
                 //handle success
                 console.log(response);
+                history.go(0);
             })
             .catch(function (response) {
                 //handle error
@@ -221,7 +222,7 @@ function EditSongPage(props) {
         id: props.songdata[0].song_id,
         title: props.songdata[0].title,
         musician: props.songdata[0].musician,
-        genre: props.songdata[0].gender,
+        genre: props.songdata[0].genre,
         year: parseInt(props.songdata[0].created_at.slice(0, 4)),
         price: props.songdata[0].price,
         quantity: props.songdata[0].quantity,
