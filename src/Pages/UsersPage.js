@@ -28,13 +28,14 @@ const compareHashed = (pass, hashed) => {
 
 function AddUserPage(props) {
     const history = useHistory();
+    const [valid, setValid] = useState(true);
     const [userInfo, setuserInfo] = React.useState({
         firstName: '',
         lastName: '',
         userName: '',
         email: '',
         password: '',
-        role: ''
+        role: 'admin'
     });
 
     const handleChange = ((e) => {
@@ -50,9 +51,35 @@ function AddUserPage(props) {
         event.preventDefault()
         console.log("connect")
         console.log(userInfo)
+        let userName = new FormData();
+
+        userName.append('userName', userInfo.userName);
+        for (var pair of userName.entries()) {
+            console.log(pair[0] + ', ' + pair[1])
+        }
+        Axios({
+            method: 'GET',
+            url: "http://localhost:3001/users/getUserName",
+            params: {userName : userInfo.userName},
+            headers: { "Content-Type": "multipart/form-data" },
+        }).then(function (res) {
+            var data = res.data;
+            console.log(data)
+            if(data.length === 0) {
+                setValid(true);
+                console.log(valid)
+            } else {
+                setValid(false);
+            }
+
+        })
+        .catch(function (response) {
+            //handle error
+            console.log(response);
+        });
         
-        // let formData = new FormData(userInfo)
-        // console.log(userInfo)
+        if(valid)
+        {
         let Userdata = new FormData();
 
         for (var pair of Userdata.entries()) {
@@ -64,7 +91,6 @@ function AddUserPage(props) {
         Userdata.append('email', userInfo.email);
         Userdata.append('password', hashPassword(userInfo.password));
         Userdata.append('role', userInfo.role);
-        console.log(Userdata.get('firstName'))
         Axios({
             method: 'POST',
             url: "http://localhost:3001/users/insert",
@@ -80,7 +106,8 @@ function AddUserPage(props) {
             console.log(response);
         });
 
-        history.push('/users');
+        history.go(0);
+    }
     });
 
     return (
@@ -110,6 +137,7 @@ function AddUserPage(props) {
                     Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
                     <input type = "text" name="userName" onChange={e => handleChange(e)}/>
                 </p>
+                {valid == false && <p>User name already exist, please try other user name</p>}
                 <p>
                     Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
                     <input type = "email" name="email" onChange={e => handleChange(e)}/>
@@ -135,14 +163,16 @@ function AddUserPage(props) {
 }
 
 function EditUserPage(props) {
+    const history = useHistory();
+    const [valid, setValid] = useState(true);
     const [selectedData, setSelectedData] = useState({
-        keyId: props.userData.keyId,
-        firstName: props.userData.firstName,
-        lastName: props.userData.lastName,
-        userName: props.userData.userName,
-        email: props.userData.email,
-        password: props.userData.password,
-        role: props.userData.role
+        keyId: props.userdata.keyId,
+        firstName: props.userdata.firstName,
+        lastName: props.userdata.lastName,
+        userName: props.userdata.userName,
+        email: props.userdata.email,
+        password: props.userdata.password,
+        role: props.userdata.role
     });
     const handleChange = (e) => {
 
@@ -150,11 +180,9 @@ function EditUserPage(props) {
         var values = target.value;
         const name = target.name;
         if(values === null) {
-            values = `props.userData.${name}`;
+            values = `props.userdata.${name}`;
         } else if (name === 'password') {
-            var temp = compareHashed(values, `props.userData.${name}`);
-        console.log(temp)
-
+            var temp = compareHashed(values, `props.userdata.${name}`);
             values = temp;
         }
         setSelectedData({ ...selectedData, [name]: values });
@@ -163,18 +191,41 @@ function EditUserPage(props) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        // let userName = new FormData();
+
+        // userName.append('userName', selectedData.userName);
+        
+        // Axios({
+        //     method: 'GET',
+        //     url: "http://localhost:3001/users/getUserName",
+        //     params: {userName : selectedData.userName},
+        //     headers: { "Content-Type": "multipart/form-data" },
+        // }).then(function (res) {
+        //     var data = res.data;
+        //     console.log(data.length)
+        //     if(data.length === 0) {
+        //         setValid(true);
+        //     } else {
+        //         setValid(false);
+        //     }
+
+        // })
+        // .catch(function (response) {
+        //     //handle error
+        //     console.log(response);
+        // });
+        // console.log(valid)
+        
+        // if(valid){
         let EditedUserdata = new FormData();
 
-        for (var pair of EditedUserdata.entries()) {
-            console.log(pair[0] + ', ' + pair[1])
-        }
         EditedUserdata.append('firstName', selectedData.firstName);
         EditedUserdata.append('lastName', selectedData.lastName);
         EditedUserdata.append('userName', selectedData.userName);
         EditedUserdata.append('email', selectedData.email);
         EditedUserdata.append('password', selectedData.password);
         EditedUserdata.append('role', selectedData.role);
-        EditedUserdata.append('keyId', props.userData.keyId);
+        EditedUserdata.append('keyId', props.userdata.keyId);
         var server = 3001;
         Axios({
             method: 'POST',
@@ -190,6 +241,30 @@ function EditUserPage(props) {
             //handle error
             console.log(response);
         });
+        history.go(0);
+    // }
+    };
+
+    const handleDelete = (e) => {
+        e.preventDefault()
+        let DeleteUserdata = new FormData();
+        DeleteUserdata.append('keyId', props.userdata.keyId);
+        var server = 3001;
+        Axios({
+            method: 'POST',
+            url: `http://localhost:${server}/users/delete`,
+            data: DeleteUserdata,
+            headers: { "Content-Type": "multipart/form-data" },
+        }).then(function (response) {
+            //handle success
+            console.log(response);
+
+        })
+        .catch(function (response) {
+            //handle error
+            console.log(response);
+        });
+        history.go(0);
     };
 
     return (
@@ -200,13 +275,13 @@ function EditUserPage(props) {
         keyboard={false}
       >
         <Modal.Header className = "header">
-            <IoClose className = "close" size={30} onClick={() => props.onHide()}/>
+            <IoClose className = "close" size={30} onClick={() => { history.go(0); }}/>
             <Modal.Title>
                 <h4>{props.title}</h4> 
             </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <form action="/users/update" method="POST" onSubmit={(e) => { handleSubmit(e); props.onHide();}}>
+            <form action="/users/update" method="POST" onSubmit={(e) => handleSubmit(e)}>
             <p>
                     First Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
                     <input type = "text" name="firstName" defaultValue={selectedData.firstName} onChange={e => handleChange(e)}/>
@@ -219,6 +294,7 @@ function EditUserPage(props) {
                     Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
                     <input type = "text" name="userName" defaultValue={selectedData.userName} onChange={e => handleChange(e)}/>
                 </p>
+                {/* {valid == false && <p>User name already exist, please try other user name</p>} */}
                 <p>
                     Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
                     <input type = "email" name="email" defaultValue={selectedData.email} onChange={e => handleChange(e)}/>
@@ -235,7 +311,8 @@ function EditUserPage(props) {
                         <option value="musician" name="role" onChange={e => handleChange(e)}>Musician</option>
                     </select>
                 </p>
-                <button type="edit" value="EDIT">EDIT</button>
+                <button type="edit" value="EDIT">EDIT</button>&nbsp;&nbsp;&nbsp;
+                <button type="delete" value="DELETE" onClick={(e) => handleDelete(e)}>DELETE</button>
             </form>
         </Modal.Body>
       </Modal>
@@ -250,26 +327,60 @@ function UsersPage() {
     const [modalShow, setModalShow] = useState(false);
     const [modalUpdateShow, setModalUpdateShow] = useState(false);
     const [sortTarget, setSortTarget] = useState("");
-    const [sortToggle, setsortToggle] = useState(1);
+    const [sortTrigger, setTrigger] = useState(false);
+    const [count, setCount] = useState({
+        userName: 0,
+        email: 0,
+        firstName: 0,
+        lastName: 0,
+        role: 0
+    });
 
     const handleChange = event => {
        setSearchTerm(event.target.value);
      };
 
-    //  function compareBy(key) {
-    //     return function (a, b) {
-    //       if (a[key] < b[key]) return -1;
-    //       if (a[key] > b[key]) return 1;
-    //       return 0;
-    //     };
-    // a[target].localeCompare(b[target])
-    //   }
+     const trigger = (target) => {
+        if(target % 2 === 0)
+        {
+            setTrigger(true);
+        } else {
+            setTrigger(false);
+        }
+     }
 
-     const handleSort = (e, target) => {
-        setsortToggle(sortToggle + 1);
-        console.log(sortToggle)
+     const handleEmailSort = (e, target) => {
         setSortTarget(target);
-        
+        setCount({ ...count, "email": count["email"] + 1 })
+        trigger(count.email);
+     }
+
+     const handleFirstNameSort = (e, target) => {
+        setSortTarget(target);
+        setCount({ ...count, "firstName": count["firstName"] + 1 })
+        trigger(count.firstName);
+
+     }
+
+     const handleLastNameSort = (e, target) => {
+        setSortTarget(target);
+        setCount({ ...count, "lastName": count["lastName"] + 1 })
+        trigger(count.lastName);
+
+     }
+
+     const handleUserNameSort = (e, target) => {
+        setSortTarget(target);
+        setCount({ ...count, "userName": count["userName"] + 1 })
+        trigger(count.userName);
+
+     }
+
+     const handleRoleSort = (e, target) => {
+        setSortTarget(target);
+        setCount({ ...count, "role": count["role"] + 1 })
+        trigger(count.role);
+
      }
 
      //for getting data from db
@@ -290,12 +401,11 @@ function UsersPage() {
           );
 
           setSearchResults(results);
-
-          if (sortToggle % 2 === 0) {
-           var result = searchResults.sort((a,b) => a[sortTarget] < b[sortTarget]  ? 1 : - 1 );
-          setSearchResults(result);
-
-          }
+        // console.log(count);
+        if(sortTrigger){
+            var SortResult = searchResults.sort((a,b) => a[sortTarget] < b[sortTarget]  ? 1 : - 1 );
+            setSearchResults(SortResult);
+        }
 
           
     }, [userdata])
@@ -320,11 +430,11 @@ function UsersPage() {
                 />
                 <table cellSpacing = "0" cellPadding = "0">
                     <tr className = "header">
-                        <th onClick={(e) => handleSort(e, 'userName')}>Username</th>
-                        <th onClick={(e) => handleSort(e, 'email')}>Email Address</th>
-                        <th onClick={(e) => handleSort(e, 'firstName')}>First Name</th>
-                        <th onClick={(e) => handleSort(e, 'lastName')}>Last name</th>
-                        <th onClick={(e) => handleSort(e, 'role')}>Role</th>
+                        <th onClick={(e) => handleUserNameSort(e, 'userName')}>Username</th>
+                        <th onClick={(e) => handleEmailSort(e, 'email')}>Email Address</th>
+                        <th onClick={(e) => handleFirstNameSort(e, 'firstName')}>First Name</th>
+                        <th onClick={(e) => handleLastNameSort(e, 'lastName')}>Last name</th>
+                        <th onClick={(e) => handleRoleSort(e, 'role')}>Role</th>
                     </tr>
                     {searchResults.map((user, index) =>(
                         <tr className = "list" key = {index} onClick={() => {setrowData(user); setModalUpdateShow(true)}}>
@@ -333,12 +443,12 @@ function UsersPage() {
                             <td id={user.keyId} >{user.firstName}</td>
                             <td id={user.keyId} >{user.lastName}</td>
                             <td id={user.keyId} >{user.role}</td>
-                            {modalUpdateShow ? <EditUserPage
+                            {modalUpdateShow && <EditUserPage
                         show={modalUpdateShow}
                         onHide={() => setModalUpdateShow(false)}
                         title = "Edit USER"
-                        userData = {rowData}
-                        /> : <div />}
+                        userdata = {rowData}
+                        />}
                             
                         </tr> 
                         

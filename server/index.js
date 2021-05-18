@@ -231,6 +231,16 @@ app.get('/users/getUserEmail', (req, res) => {
   })
 })
 
+// To check the given user name is already exist or not
+app.get('/users/getUserName', (req, res) => {
+  const GETUserName = 'select * from Users where userName=?;';
+  var name = req.query.userName;
+  console.log('UserName: ' + JSON.stringify(req.query));
+  connection.query(GETUserName, [name], (err, result) => {
+    res.send(result)
+  })
+})
+
 // INSERT statment, data = [(username, email, lastname, firstname, role)]
 app.post('/users/insert', (req, res) => {
   // update statment, data = [tableName, "conlumnName2 = 'NewData'", "conlumnName2 = 'OldData'"]
@@ -275,9 +285,10 @@ app.post('/users/update', (req, res) => {
 
 app.post('/users/delete', (req, res) => {
   // update statment, data = [tableName, "conlumnName2 = 'NewData'", "targetconlumnName = 'targetValue'"]
-  const DELETE = "DELETE from Users where keyId = ?;"
+  const DELETE = "DELETE from Users WHERE keyId = ?;"
 
-  console.log(req.body)
+  var keyId = req.body.keyId;
+  console.log(keyId)
 
   connection.query(DELETE, [keyId], (err, result) => {
     console.log(err);
