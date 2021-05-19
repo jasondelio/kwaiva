@@ -82,13 +82,11 @@ app.get('/login/verify', (req, res) => {
 })
 
 app.get('/songs/get', (req, res) => {
-  // var a = Convert(Date, "2021-05-17T17:13:43.000Z")
-  // Console.log(a)
   connection.query('select * from Songs;', (err, result) => {
-    console.log(result[1]["created_at"]);
-    var resulttime = result[1]["created_at"].toLocaleDateString('en-AU', { day: 'numeric', month: 'numeric', year: 'numeric' }).replace(',', '').replace('/', '');
-    console.log(resulttime);
-    res.send(result)
+    var changedResult = result.map((value) => ({ ...value, "created_at": value["created_at"].toLocaleDateString('zh-Hans-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).replace(',', '').replace('/', '-').replace('/', '-') }));
+
+    console.log(changedResult);
+    res.send(changedResult)
   })
 })
 
@@ -103,25 +101,15 @@ app.get('/songs/getid', (req, res) => {
   connection.query(selectIdxOne, [idx], (err, result) => {
     console.log(err);
     console.log(result);
-    res.send(result)
-  })
-})
+    var changedResult = result.map((value) => ({ ...value, "created_at": value["created_at"].toLocaleDateString('zh-Hans-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).replace(',', '').replace('/', '-').replace('/', '-') }));
 
-app.get('/testdata/insert', (req, res) => {
-  const selectOne = "select * from TestData; "
-  var updateTitle = req.body.changedtitled;
-  console.log(updateTitle)
-
-  connection.query(selectOne, (err, result) => {
-    console.log(err);
-    console.log(result);
-    res.send(result)
+    console.log(changedResult);
+    res.send(changedResult)
   })
 })
 
 app.post('/getform', (req, res) => {
-  const selectOne = "select * from TestData where title = ?; "
-  const insertOne = "INSERT INTO Songs (title, musician, photo, music, price, quantity, sold_number, genre, youtubelink)  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?);"
+  const insertOne = "INSERT INTO Songs (title, musician, photo, music, price, quantity, sold_number, genre, youtubelink, release_year)  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
 
   const title = req.body.title;
   const musician = req.body.musician;
@@ -131,13 +119,14 @@ app.post('/getform', (req, res) => {
   const quantity = req.body.quantity;
   const gender = req.body.genre;
   const urlyoutube = req.body.urlYoutube;
+  const releaseYear = req.body.year;
   // console.log(music)
   // connection.query(selectOne, ['testets'], (err, result) => {
   //   console.log(err);
   //   console.log(result);
   //   res.send("yes")
   // })
-  connection.query(insertOne, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube], (err, result) => {
+  connection.query(insertOne, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube, releaseYear], (err, result) => {
     console.log(err);
     console.log(result);
     res.send("yes")
@@ -145,8 +134,7 @@ app.post('/getform', (req, res) => {
 })
 
 app.post('/song/update', (req, res) => {
-  const selectOne = "select * from TestData where title = ?; "
-  const updateSql = "UPDATE Songs SET title=?, musician=?, photo=?, music=?, price=?, quantity=?, sold_number=?, genre=?, youtubelink=? WHERE song_id=?; "
+  const updateSql = "UPDATE Songs SET title=?, musician=?, photo=?, music=?, price=?, quantity=?, sold_number=?, genre=?, youtubelink=?, release_year=? WHERE song_id=?; "
 
   const title = req.body.title;
   const musician = req.body.musician;
@@ -156,6 +144,7 @@ app.post('/song/update', (req, res) => {
   const quantity = req.body.quantity;
   const gender = req.body.genre;
   const urlyoutube = req.body.urlYoutube;
+  const releaseYear = req.body.year;
 
   const songid = req.body.id;
 
@@ -172,7 +161,7 @@ app.post('/song/update', (req, res) => {
   //   console.log(result);
   //   res.send("yes")
   // })
-  connection.query(updateSql, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube, songid], (err, result) => {
+  connection.query(updateSql, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube, releaseYear, songid], (err, result) => {
     console.log(err);
     console.log(result);
     res.send("yes")
@@ -181,7 +170,6 @@ app.post('/song/update', (req, res) => {
 
 
 app.post('/deletesong', (req, res) => {
-  const selectOne = "select * from Songs where song_id = ?; "
   const deleteOne = "DELETE from Songs where song_id = ?; "
   const song_id = req.body.song_id;
   console.log(req)
