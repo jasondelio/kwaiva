@@ -46,11 +46,13 @@ function AddUserPage(props) {
             headers: { "Content-Type": "multipart/form-data" },
         }).then(function (res) {
             var data = res.data;
-            console.log(data.length)
+            
             if(data.length < 1) {
-                setValid(true);
+                return true;
+                // setValid(true);
             } else {
-                setValid(false);
+                return false;
+                // setValid(false);
             }
 
         })
@@ -58,7 +60,6 @@ function AddUserPage(props) {
             //handle error
             console.log(response);
         });
-        console.log(valid)
     }
 
     const isEmail = (v) => {
@@ -87,15 +88,15 @@ function AddUserPage(props) {
         const target = e.target;
         const value = target.value;
         const name = target.name;
-        if (name === 'userName') {
-            checkSame(value);
-        }
         setuserInfo({ ...userInfo, [name]: value });
     })
     
 
     const handleSubmit = ((event) => {
-        event.preventDefault()  
+        event.preventDefault()
+        if(!checkSame(userInfo.userName)){
+            setValid(false);
+        }
         if(!isEmail(userInfo.email)) {
             setModalShow(true);
         }
@@ -207,8 +208,6 @@ function EditUserPage(props) {
         } else if (name === 'password') {
             var temp = compareHashed(values, `props.userdata.${name}`);
             values = temp;
-        } else if (name === 'userName') {
-            checkSame(values);
         }
         setSelectedData({ ...selectedData, [name]: values });
     }
@@ -222,9 +221,9 @@ function EditUserPage(props) {
         }).then(function (res) {
             var data = res.data;
             if(data.length === 0 || (data.length === 1 && data[0] === v)) {
-                setValid(true);
+                return true;
             } else {
-                setValid(false);
+                return false;
             }
 
         })
@@ -267,6 +266,9 @@ function EditUserPage(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         var userConfirmation;
+        if(!checkSame(selectedData.userName)){
+            setValid(false);
+        }
         if(!isEmail(selectedData.email)) {
             setModalShow(true);
         } else {
