@@ -370,16 +370,7 @@ function EditUserPage(props) {
                 </p>
                 <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 {modalShow == true && handleAlert("It is not valid format of email. Please check the format.")}
-                {/* {confirm == true && Alert.alert("Do you really want to edit this user information?", [ {
-            text: "Cancel",
-            onPress: () => setconfirm(false),
-            style: "cancel"
-        },
-            {
-                text: "Ok",
-                onPress: () => history.go(0)
-            }
-        ])} */}
+                
                 <button type="delete" value="DELETE" onClick={(e) => handleDelete(e)}>DELETE</button>
             </form>
         </Modal.Body>
