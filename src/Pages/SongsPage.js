@@ -6,12 +6,6 @@ import Sidebar from "../Components/Sidebar";
 import Topbar from "../Components/Topbar";
 import Modal from 'react-bootstrap/Modal'
 import { IoClose } from "react-icons/io5";
-import { FaPlay } from "react-icons/fa";
-import { FaPause } from "react-icons/fa";
-import { FaStop } from "react-icons/fa";
-import sound from './10.mp3';
-import afterone from './red.mp3';
-import immmmag from './kwaiva_logo_sample.png';
 
 function UploadSongPage(props) {
     const history = useHistory();
@@ -379,8 +373,7 @@ function EditSongPage(props) {
                             onChange={(e) => handleImageFileChange(e)} />
                     </p>
                     <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <input type="reset" value="RESET"></input>
-                    <p><button onClick={(e) => { handleDelete(e); }}>DELETE</button></p>
+                    <button onClick={(e) => { handleDelete(e); }}>DELETE</button>
                 </form>
 
             </Modal.Body>

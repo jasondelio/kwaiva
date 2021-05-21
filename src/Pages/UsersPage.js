@@ -343,7 +343,7 @@ function EditUserPage(props) {
                         <option value="musician" name="role" onChange={e => handleChange(e)}>Musician</option>
                     </select>
                 </p>
-                <button type="edit" value="EDIT">EDIT</button>&nbsp;&nbsp;&nbsp;
+                <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 {modalShow == true && handleAlert("It is not valid format of email. Please check the format.")}
                 <button type="delete" value="DELETE" onClick={(e) => handleDelete(e)}>DELETE</button>
             </form>
@@ -475,7 +475,7 @@ function UsersPage() {
                             {modalUpdateShow && <EditUserPage
                         show={modalUpdateShow}
                         onHide={() => setModalUpdateShow(false)}
-                        title = "Edit USER"
+                        title = "EDIT USER"
                         userdata = {rowData}
                         />}
                             
