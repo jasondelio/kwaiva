@@ -258,10 +258,10 @@ app.post('/users/insert', (req, res) => {
 
 app.post('/users/update', (req, res) => {
   // update statment, data = [tableName, "conlumnName2 = 'NewData'", "targetconlumnName = 'targetValue'"]
-  const UPDATE = "UPDATE Users SET firstName = ?, lastName = ?, userName = ?,password = ?,email =?,role =? WHERE keyId = ?;"
+  const UPDATE = "UPDATE Users SET firstName = ?, lastName = ?, password = ?,email =?,role =? WHERE keyId = ?;"
   var firstName = req.body.firstName;
   var lastName = req.body.lastName;
-  var userName = req.body.userName;
+  // var userName = req.body.userName;
   var email = req.body.email;
   var password = req.body.password;
   var role = req.body.role;
@@ -269,7 +269,7 @@ app.post('/users/update', (req, res) => {
 
   console.log(req.body)
 
-  connection.query(UPDATE, [firstName, lastName, userName, password, email, role, keyId], (err, result) => {
+  connection.query(UPDATE, [firstName, lastName, password, email, role, keyId], (err, result) => {
     console.log(err);
     console.log(result);
     res.send(result)

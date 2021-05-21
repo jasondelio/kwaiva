@@ -20,6 +20,7 @@
     "express-csp-header": "^4.1.0",
     "multer": "^1.4.2",
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "react-native": "^0.64.1"
   }
 }

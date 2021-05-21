@@ -6,6 +6,7 @@ import Modal from 'react-bootstrap/Modal'
 import { IoClose } from "react-icons/io5";
 import Axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import { Alert } from "react-native";
 
 const hashPassword = (pass) => {
     var bcrypt = require('bcryptjs');
@@ -185,6 +186,7 @@ function EditUserPage(props) {
     const history = useHistory();
     const [valid, setValid] = useState(true);
     const [modalShow, setModalShow] = useState(false);
+    const [confirm, setconfirm] = useState(false);
     const [selectedData, setSelectedData] = useState({
         keyId: props.userdata.keyId,
         firstName: props.userdata.firstName,
@@ -219,7 +221,7 @@ function EditUserPage(props) {
             headers: { "Content-Type": "multipart/form-data" },
         }).then(function (res) {
             var data = res.data;
-            if(data.length < 2) {
+            if(data.length === 0 || (data.length === 1 && data[0] === v)) {
                 setValid(true);
             } else {
                 setValid(false);
@@ -243,13 +245,34 @@ function EditUserPage(props) {
         setModalShow(false);
     }
     
+    const handleSubmitBtn = () => {
+        if(modalShow == true) {
+            handleAlert("It is not valid format of email. Please check the format.")
+    } else
+    {
+        Alert.alert("Do you really want to edit this user information?", [ {
+            text: "Cancel",
+            onPress: () => setconfirm(false),
+            style: "cancel"
+        },
+            {
+                text: "Ok",
+                onPress: () => history.go(0)
+            }
+        ])
+    }
+}
+    
 
     const handleSubmit = (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        var userConfirmation;
         if(!isEmail(selectedData.email)) {
             setModalShow(true);
+        } else {
+            userConfirmation = window.confirm("Do you really want to edit this user information?");
         }
-        if(valid == true && isEmail(selectedData.email) == true){
+        if(valid == true && isEmail(selectedData.email) == true && userConfirmation == true){
         let EditedUserdata = new FormData();
 
         EditedUserdata.append('firstName', selectedData.firstName);
@@ -258,7 +281,7 @@ function EditUserPage(props) {
         EditedUserdata.append('email', selectedData.email);
         EditedUserdata.append('password', selectedData.password);
         EditedUserdata.append('role', selectedData.role);
-        EditedUserdata.append('keyId', props.userdata.keyId);
+        EditedUserdata.append('keyId', selectedData.keyId);
         var server = 3001;
         Axios({
             method: 'POST',
@@ -345,6 +368,16 @@ function EditUserPage(props) {
                 </p>
                 <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 {modalShow == true && handleAlert("It is not valid format of email. Please check the format.")}
+                {/* {confirm == true && Alert.alert("Do you really want to edit this user information?", [ {
+            text: "Cancel",
+            onPress: () => setconfirm(false),
+            style: "cancel"
+        },
+            {
+                text: "Ok",
+                onPress: () => history.go(0)
+            }
+        ])} */}
                 <button type="delete" value="DELETE" onClick={(e) => handleDelete(e)}>DELETE</button>
             </form>
         </Modal.Body>
@@ -397,9 +430,7 @@ function UsersPage() {
      useEffect(() => {
         Axios.get('http://localhost:3001/users/get').then((res) => {
             var data = res.data;
-            const results = data.map(song =>
-                song
-            );
+            const results = data.map((user)=> user);
             setUserData(results);
         })
 
@@ -475,7 +506,7 @@ function UsersPage() {
                             {modalUpdateShow && <EditUserPage
                         show={modalUpdateShow}
                         onHide={() => setModalUpdateShow(false)}
-                        title = "EDIT USER"
+                        title = "Edit USER"
                         userdata = {rowData}
                         />}
                             
