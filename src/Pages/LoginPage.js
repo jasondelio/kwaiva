@@ -57,7 +57,7 @@ function LoginPage() {
       </div>
       <div className="container">
         <h1>ADMIN LOGIN</h1>
-        <input className="inputbox" placeholder="USERNAME OR EMAIL" onChange={(e) => setUsername(e.target.value)} onKeyPress={(e) => handlerKeyPressed(e)} />
+        <input className="inputbox" placeholder="USERNAME" onChange={(e) => setUsername(e.target.value)} onKeyPress={(e) => handlerKeyPressed(e)} />
         <input type="password" className="inputbox" placeholder="PASSWORD" onChange={(e) => setPassword(e.target.value)} onKeyPress={(e) => handlerKeyPressed(e)} />
         <a className="login" onClick={() => handlerClicked()}>LOGIN</a>
       </div>
