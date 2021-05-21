@@ -47,7 +47,7 @@ function AddUserPage(props) {
         }).then(function (res) {
             var data = res.data;
             console.log(data.length)
-            if(data.length < 2) {
+            if(data.length < 1) {
                 setValid(true);
             } else {
                 setValid(false);
