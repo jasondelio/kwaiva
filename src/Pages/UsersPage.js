@@ -499,7 +499,7 @@ function UsersPage() {
                             {modalUpdateShow && <EditUserPage
                         show={modalUpdateShow}
                         onHide={() => setModalUpdateShow(false)}
-                        title = "Edit USER"
+                        title = "EDIT USER"
                         userdata = {rowData}
                         />}
                             
