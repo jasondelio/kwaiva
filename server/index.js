@@ -34,11 +34,13 @@ connection.connect(function (err) {
   console.log('connected as id ' + connection.threadId);
 });
 
-connection.query('use Users;', (err) => {
+connection.query('use kwaiva;', (err) => {
   if (err === null) {
     console.log("no error")
   }
 })
+
+/// Initialize the Tables and a data ( if you already made table, pleases comment out this)
 
 
 

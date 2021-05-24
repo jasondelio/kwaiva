@@ -20,6 +20,11 @@ function LoginPage() {
 
 
   const handleVerification = (username, password) => {
+    // var bcrypt = require('bcryptjs');
+    // const saltRounds = 10;
+    // var hash = bcrypt.hashSync(password, saltRounds);
+
+    // console.log(hash);
     Axios({
       method: "GET",
       url: "http://localhost:3001/login/verify",
