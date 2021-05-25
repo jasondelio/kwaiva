@@ -387,20 +387,10 @@ function SongsPage() {
     const [originResults, setOriginResults] = useState([]);
     const [modalShow, setModalShow] = useState(false);
     const [modalUpdateShow, setModalUpdateShow] = useState(false);
-    const [isPlay, setPlay] = useState(false);
     const [isShow, setIsShow] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
-    const [isPlayList, setPlayList] = useState([]);
     const [useId, setID] = useState(0);
     const [iniSrcMusic, setIniSrcMusic] = useState("");
-    const [selectedSong, setSelectedSong] = useState([{
-        song_id: 0,
-        title: "",
-        musician: "",
-        genre: "",
-        price: 0,
-        quantity: 0,
-    }]);
 
     // const handleChange = event => {
     //     setSearchTerm(event.target.value);
@@ -420,7 +410,6 @@ function SongsPage() {
             for (var i = 0; i < results.length; i++) {
                 createlist.push(false);
             }
-            setPlayList(createlist);
             setIsLoading(false);
             // var temp = Buffer.from(results[0].photo.data, "base64").toString('ascii');
         })
@@ -442,56 +431,11 @@ function SongsPage() {
         }
     }
 
-    const handleEditButton = ((paraId) => {
-        var formData1 = new FormData()
-        formData1.append('songID', paraId);
-        Axios({
-            method: "GET",
-            url: "http://localhost:3001/songs/getid",
-            params: { songID: paraId },
-            headers: { "Content-Type": "multipart/form-data" },
-        }).then(function (response) {
-            //handle success
-            var data = response.data;
-            setSelectedSong(data);
-        }).catch(function (response) {
-            //handle error
-            console.log(response);
-        });
-    })
-
     const handlePlay = (param_audio, index) => {
         setIsShow(true);
         setIniSrcMusic(param_audio);
     }
 
-    // const play = (param_audio, index) => {
-    //     var audio = document.getElementById('myAudio');
-    //     console.log(audio);
-    //     audio.src = param_audio;
-    //     console.log(audio.src)
-    //     audio.play();
-    //     var createlist = []
-    //     for (var i = 0; i < searchResults.length; i++) {
-    //         createlist.push(false);
-    //     }
-    //     createlist[index] = true
-    //     console.log(createlist)
-    //     console.log(index)
-
-    //     setPlayList(createlist);
-    // };
-
-    // const pause = (index) => {
-    //     var audio = document.getElementById('myAudio');
-    //     audio.pause();
-    //     // setPlay(false);
-    //     var createlist = []
-    //     for (var i = 0; i < searchResults.length; i++) {
-    //         createlist.push(false);
-    //     }
-    //     setPlayList(createlist)
-    // };
 
     const stop = (index) => {
         var audio = document.getElementById('myAudio');
@@ -502,7 +446,6 @@ function SongsPage() {
             createlist.push(false);
         }
         console.log(createlist)
-        setPlayList(createlist)
         setIsShow(false);
     };
 
@@ -536,7 +479,7 @@ function SongsPage() {
                                         <p className="title"><b>{song.title}</b><br /><a className="musician">by {song.musician}</a></p>
                                         <p className="items">Price: {song.price}<br /> Quantity: {song.quantity}</p>
                                         <p className="items">Last edited<br />{song.created_at}</p>
-                                        <button className="UploadButton" onClick={() => { setID(song.song_id); handleEditButton(song.song_id); setModalUpdateShow(true) }}>EDIT</button>
+                                        <button className="UploadButton" onClick={() => { setID(song.song_id); setModalUpdateShow(true) }}>EDIT</button>
                                         {modalUpdateShow ? <EditSongPage
                                             show={modalUpdateShow}
                                             onHide={() => setModalUpdateShow(false)}
@@ -544,10 +487,6 @@ function SongsPage() {
                                             songdata={[searchResults.find((so) => so.song_id === useId)]}
                                             songid={index}
                                         /> : <div />}
-                                        {/* <a className="audio">
-                                            <div className="play" onClick={() => { setIniSrcMusic(Buffer.from(song.music.data, "base64").toString('ascii')); handlePlay(Buffer.from(song.music.data, "base64").toString('ascii'), index) }}><FaPlay /></div>
-                                            <div className="stop" onClick={() => stop(index)}><FaStop /></div>
-                                        </a> */}
                                     </li>
                                 ))}
                             </ul>
