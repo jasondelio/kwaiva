@@ -239,7 +239,7 @@ app.get('/users/getUserName', (req, res) => {
 // INSERT statment, data = [(username, email, lastname, firstname, role)]
 app.post('/users/insert', (req, res) => {
   // update statment, data = [tableName, "conlumnName2 = 'NewData'", "conlumnName2 = 'OldData'"]
-  const INSERT = 'INSERT INTO Users (firstname, lastname, username, password, email, role) VALUES (?,?,?,?,?,?)';
+  const INSERT = 'INSERT INTO Users (firstName, lastName, userName, password, email, role) VALUES (?,?,?,?,?,?)';
   var fstName = req.body.firstName;
   var lstName = req.body.lastName;
   var userName = req.body.userName;

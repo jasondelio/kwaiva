@@ -94,7 +94,7 @@ function AddUserPage(props) {
 
     const handleSubmit = ((event) => {
         event.preventDefault()
-        if(!checkSame(userInfo.userName)){
+        if(checkSame(userInfo.userName)===false){
             setValid(false);
         }
         if(!isEmail(userInfo.email)) {
@@ -266,7 +266,7 @@ function EditUserPage(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
         var userConfirmation;
-        if(!checkSame(selectedData.userName)){
+        if(checkSame(selectedData.userName)===false){
             setValid(false);
         }
         if(!isEmail(selectedData.email)) {
