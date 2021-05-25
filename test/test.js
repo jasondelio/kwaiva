@@ -5,6 +5,9 @@ const assert = chai.assert;
 const request = require('request');
 const Axios = require('axios');
 const URL = 'http://localhost:3001/songs/getid';
+var FormData = require('form-data');
+
+// Run this ./node_modules/.bin/mocha test/test.js to test the backend working
 
 /**
  * @param  {Object} options -
@@ -26,7 +29,21 @@ const pRequest = (options) => {
 describe('API response', async function () {
   this.timeout(10000);
 
-  // Normal (No error)
+  // LogIn verification
+  it('Check User Login Coorect ! ', async function () {
+    const res = await Axios({
+      method: "get",
+      url: "http://localhost:3001/login/verify",
+      params: {
+        userName: 'admin',
+        password: 'adminTest',
+      },
+    });
+    // console.log(res.data);
+    assert.equal(res.data, "Yes", 'See if login succeed');
+  });
+
+  // Normal(No error)
   it('The Song id should be same', async function () {
     const res = await Axios({
       method: 'GET',
@@ -35,10 +52,10 @@ describe('API response', async function () {
         "Content-Type": "multipart/form-data"
       },
       params: {
-        songID: 1,
+        songID: 2,
       },
     });
-    assert.equal(res.data[0]["song_id"], 1, 'Comparing ID');
+    assert.equal(res.data[0]["song_id"], 2, 'Comparing ID');
     // try {
     //   const body = JSON.parse(res.body);
     //   assert.strictEqual(body.message, '', '');
@@ -46,5 +63,39 @@ describe('API response', async function () {
     //   assert.fail('');
     // }
   });
+
+  it('The Test Song is added', async function () {
+    const res = await Axios({
+      method: "post",
+      url: "http://localhost:3001/getform",
+      data: {
+        title: 'TestTitle',
+        musician: 'TestTitle',
+        genre: 'TestPop',
+        year: 2020,
+        price: 10,
+        quantity: 10,
+        urlYoutube: 'https://test',
+        musicfile: 'musicFile',
+        imagefile: 'imageFile',
+      },
+    });
+    // console.log(res.data);
+    assert.equal(res.data, "Succeed", 'Comparing ID');
+  });
+
+
+  // // deletesong
+  // it('The Test Song is deleted ! ', async function () {
+  //   const res = await Axios({
+  //     method: "post",
+  //     url: "http://localhost:3001/deletesong",
+  //     data: {
+  //       song_id: 5,
+  //     },
+  //   });
+  //   // console.log(res.data);
+  //   assert.equal(res.data, "Succeed", 'See if deleting succeed');
+  // });
 
 });

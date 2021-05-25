@@ -57,7 +57,7 @@ app.get('/login/verify', (req, res) => {
 
   var userName = req.query.userName;
   var passWord = req.query.password;
-
+  console.log(req);
   connection.query(GET, [userName], (err, result) => {
     if (err != null) {
       res.send("No")
@@ -128,10 +128,16 @@ app.post('/getform', (req, res) => {
   //   console.log(result);
   //   res.send("yes")
   // })
+  console.log(req);
   connection.query(insertOne, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube, releaseYear], (err, result) => {
-    console.log(err);
-    console.log(result);
-    res.send("yes")
+    if (err) {
+      console.log(err);
+      res.send("Error")
+    }
+    else {
+      console.log(result);
+      res.send("Succeed")
+    }
   })
 })
 
@@ -164,9 +170,14 @@ app.post('/song/update', (req, res) => {
   //   res.send("yes")
   // })
   connection.query(updateSql, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube, releaseYear, songid], (err, result) => {
-    console.log(err);
-    console.log(result);
-    res.send("yes")
+    if (err) {
+      console.log(err);
+      res.send("Error")
+    }
+    else {
+      console.log(result);
+      res.send("Succeed")
+    }
   })
 })
 
@@ -183,9 +194,14 @@ app.post('/deletesong', (req, res) => {
   //   res.send("yes")
   // })
   connection.query(deleteOne, [song_id], (err, result) => {
-    console.log(err);
-    console.log(result);
-    res.send("yes")
+    if (err) {
+      console.log(err);
+      res.send("Error")
+    }
+    else {
+      console.log(result);
+      res.send("Succeed")
+    }
   })
 })
 
