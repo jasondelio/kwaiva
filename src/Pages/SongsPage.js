@@ -208,9 +208,6 @@ function EditSongPage(props) {
             });
         }
     });
-    // console.log("Child");
-    // console.log(props.songid)
-    // console.log(props.songdata)
 
     const [values, setValues] = useState({
         id: props.songdata[0].song_id,
@@ -278,9 +275,7 @@ function EditSongPage(props) {
         for (var key in values) {
             formData.append(key, values[key]);
         }
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-        }
+
         if (imageFile === props.songdata[0].photo) {
             console.log("same")
         } else {
@@ -430,7 +425,7 @@ function SongsPage() {
         }
     }
 
-    const handleEditButton = ((paraId) => {
+    const handleEditButton = ((paraId, play_or_edit) => {
         Axios({
             method: "GET",
             url: "http://localhost:3001/songs/getsong",
@@ -439,29 +434,18 @@ function SongsPage() {
         }).then(function (response) {
             //handle success
             var data = response.data;
-            setSelectedSong(Buffer.from(data[0].music.data, "base64").toString('ascii'));
-            setModalUpdateShow(true)
+            if (play_or_edit === "play") {
+                setIsShow(true);
+                setIniSrcMusic(Buffer.from(data[0].music.data, "base64").toString('ascii'));
+            }
+            else {
+                setSelectedSong(Buffer.from(data[0].music.data, "base64").toString('ascii'));
+                setModalUpdateShow(true)
+            }
         }).catch(function (response) {
             console.log(response);
         });
     })
-
-    const handlePlayButton = (paraId) => {
-        Axios({
-            method: "GET",
-            url: "http://localhost:3001/songs/getsong",
-            params: { songID: paraId },
-            headers: { "Content-Type": "multipart/form-data" },
-        }).then(function (response) {
-            //handle success
-            var data = response.data;
-            setIsShow(true);
-            setIniSrcMusic(Buffer.from(data[0].music.data, "base64").toString('ascii'));
-        }).catch(function (response) {
-            //handle error
-            console.log(response);
-        });
-    }
 
     const stop = (index) => {
         var audio = document.getElementById('myAudio');
@@ -500,12 +484,12 @@ function SongsPage() {
                         <div className="List">
                             <ul>
                                 {searchResults.map((song, index) => (
-                                    <li className="row" key={index} onClick={() => { handlePlayButton(song.song_id) }}>
+                                    <li className="row" key={index} onClick={() => { handleEditButton(song.song_id, "play"); }}>
                                         <img id="imgclass1" src={Buffer.from(song.photo.data, "base64").toString('ascii')} />
                                         <p className="title"><b>{song.title}</b><br /><a className="musician">by {song.musician}</a></p>
                                         <p className="items">Price: {song.price}<br /> Quantity: {song.quantity}</p>
                                         <p className="items">Last edited<br />{song.created_at}</p>
-                                        <button className="UploadButton" onClick={() => { setID(song.song_id); handleEditButton(song.song_id); }}>EDIT</button>
+                                        <button className="UploadButton" onClick={() => { setID(song.song_id); handleEditButton(song.song_id, "edit"); }}>EDIT</button>
                                         {modalUpdateShow ? <EditSongPage
                                             show={modalUpdateShow}
                                             onHide={() => setModalUpdateShow(false)}
