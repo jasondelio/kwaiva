@@ -57,7 +57,6 @@ app.get('/login/verify', (req, res) => {
 
   var userName = req.query.userName;
   var passWord = req.query.password;
-  console.log(req);
   connection.query(GET, [userName], (err, result) => {
     if (err != null) {
       res.send("No")
@@ -70,9 +69,6 @@ app.get('/login/verify', (req, res) => {
       var userfrom = result[0]["userName"];
       var role = result[0]["role"];
       var isValid = bcrypt.compareSync(passWord, passfrom);
-      // console.log(passfrom)
-      // console.log(passWord)
-      // console.log(isValid)
       if (isValid && userName == userfrom && role == "admin") {
         res.send("Yes")
       }
@@ -83,30 +79,26 @@ app.get('/login/verify', (req, res) => {
   })
 })
 
-app.get('/songs/get', (req, res) => {
-  connection.query('select * from Songs;', (err, result) => {
-    var changedResult = result.map((value) => ({ ...value, "created_at": value["created_at"].toLocaleDateString('zh-Hans-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).replace(',', '').replace('/', '-').replace('/', '-') }));
+/// SONGS ///
 
+app.get('/songs/get', (req, res) => {
+  connection.query('select song_id, title, musician, photo, price, genre, youtubelink, quantity, release_year, created_at, sold_number from Songs;', (err, result) => {
+    var changedResult = result.map((value) => ({ ...value, "created_at": value["created_at"].toLocaleDateString('zh-Hans-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).replace(',', '').replace('/', '-').replace('/', '-') }));
     console.log(changedResult);
     res.send(changedResult)
   })
 })
 
-app.get('/songs/getid', (req, res) => {
 
-  const selectIdxOne = 'select * from Songs where song_id=?;'
-  console.log(req)
-  console.log(req.query)
+app.get('/songs/getsong', (req, res) => {
+
+  const selectIdxOne = 'select music from Songs where song_id=?;'
   var idx = req.query.songID;
-  console.log(idx)
 
   connection.query(selectIdxOne, [idx], (err, result) => {
     console.log(err);
     console.log(result);
-    var changedResult = result.map((value) => ({ ...value, "created_at": value["created_at"].toLocaleDateString('zh-Hans-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).replace(',', '').replace('/', '-').replace('/', '-') }));
-
-    console.log(changedResult);
-    res.send(changedResult)
+    res.send(result)
   })
 })
 
@@ -122,13 +114,7 @@ app.post('/getform', (req, res) => {
   const gender = req.body.genre;
   const urlyoutube = req.body.urlYoutube;
   const releaseYear = req.body.year;
-  // console.log(music)
-  // connection.query(selectOne, ['testets'], (err, result) => {
-  //   console.log(err);
-  //   console.log(result);
-  //   res.send("yes")
-  // })
-  console.log(req);
+
   connection.query(insertOne, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube, releaseYear], (err, result) => {
     if (err) {
       console.log(err);
@@ -156,19 +142,6 @@ app.post('/song/update', (req, res) => {
 
   const songid = req.body.id;
 
-  // console.log("concosossfaa server")
-  // console.log(title)
-  // console.log(musician)
-  // console.log(photo)
-  // console.log(music)
-  // console.log(price)
-  // console.log(quantity)
-  // console.log(songid)
-  // connection.query(selectOne, ['testets'], (err, result) => {
-  //   console.log(err);
-  //   console.log(result);
-  //   res.send("yes")
-  // })
   connection.query(updateSql, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube, releaseYear, songid], (err, result) => {
     if (err) {
       console.log(err);
@@ -185,14 +158,7 @@ app.post('/song/update', (req, res) => {
 app.post('/deletesong', (req, res) => {
   const deleteOne = "DELETE from Songs where song_id = ?; "
   const song_id = req.body.song_id;
-  console.log(req)
-  console.log("deleete")
-  console.log(song_id)
-  // connection.query(selectOne, ['testets'], (err, result) => {
-  //   console.log(err);
-  //   console.log(result);
-  //   res.send("yes")
-  // })
+
   connection.query(deleteOne, [song_id], (err, result) => {
     if (err) {
       console.log(err);
