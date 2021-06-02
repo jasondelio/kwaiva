@@ -75,7 +75,6 @@ function UploadSongPage(props) {
         formData.append('imagefile', imageFile);
 
         var userConfirmation = window.confirm("Do you really want to update with this song?");
-        console.log(userConfirmation);
 
         if (userConfirmation) {
             Axios({
@@ -84,7 +83,6 @@ function UploadSongPage(props) {
                 data: formData,
                 headers: { "Content-Type": "multipart/form-data" },
             }).then(function (response) {
-                console.log(response);
                 history.go(0);
                 event.props.onHide();
 
@@ -190,7 +188,6 @@ function EditSongPage(props) {
                 headers: { "Content-Type": "multipart/form-data" },
             }).then(function (response) {
                 //handle success
-                // console.log(response);
                 history.go(0);
                 setValues({
                     id: 0,
@@ -224,10 +221,7 @@ function EditSongPage(props) {
         const target = e.target;
         const value = target.value;
         const name = target.name;
-        // console.log(values)
         setValues({ ...values, [name]: value });
-        // console.log(props.musicdata);
-        // console.log(Buffer.from(props.testdata[0].music, "base64").toString('ascii'))
     }
 
     const [musicFile, setMusicFile] = useState(props.musicdata);
@@ -269,8 +263,7 @@ function EditSongPage(props) {
 
     const handleSubmit = ((event) => {
         event.preventDefault()
-        console.log("handle Submit")
-        console.log(event)
+
         let formData = new FormData()
         for (var key in values) {
             formData.append(key, values[key]);
@@ -294,7 +287,6 @@ function EditSongPage(props) {
                 headers: { "Content-Type": "multipart/form-data" },
             }).then(function (response) {
                 //handle success
-                console.log(response);
                 history.go(0);
                 setValues({
                     title: "",
@@ -455,7 +447,7 @@ function SongsPage() {
         for (var i = 0; i < searchResults.length; i++) {
             createlist.push(false);
         }
-        console.log(createlist)
+
         setIsShow(false);
     };
 

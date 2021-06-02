@@ -10,16 +10,6 @@ var upload = multer({
 })
 const { expressCspHeader, INLINE, NONE, SELF } = require('express-csp-header');
 
-// app.set('port', process.env.PORT || 3001);
-// process.env.PORT = 3001
-// console.log(process.env.PORT)
-
-// app.use(expressCspHeader({
-//   directives: {
-//     'script-src': [SELF, INLINE],
-//   }
-// }));
-
 app.listen(3001, () => {
   console.log("running server")
 })
@@ -84,7 +74,6 @@ app.get('/login/verify', (req, res) => {
 app.get('/songs/get', (req, res) => {
   connection.query('select song_id, title, musician, photo, price, genre, youtubelink, quantity, release_year, created_at, sold_number from Songs;', (err, result) => {
     var changedResult = result.map((value) => ({ ...value, "created_at": value["created_at"].toLocaleDateString('zh-Hans-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).replace(',', '').replace('/', '-').replace('/', '-') }));
-    console.log(changedResult);
     res.send(changedResult)
   })
 })
@@ -212,7 +201,7 @@ app.get('/users/getUserEmail', (req, res) => {
 app.get('/users/getUserName', (req, res) => {
   const GETUserName = 'select * from Users where userName=?;';
   var name = req.query.userName;
-  console.log('UserName: ' + JSON.stringify(req.query));
+  // console.log('UserName: ' + JSON.stringify(req.query));
   connection.query(GETUserName, [name], (err, result) => {
     res.send(result)
   })
