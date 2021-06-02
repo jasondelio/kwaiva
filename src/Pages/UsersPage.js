@@ -156,12 +156,12 @@ function AddUserPage(props) {
                     Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
                     <input type = "text" name="userName" onChange={e => handleChange(e)}/>
                 </p>
-                {valid == false && handleAlert("This user name already exists. Please try another user name.")}
+                {valid === false && handleAlert("This user name already exists. Please try another user name.")}
                 <p>
                     Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
                     <input type = "email" name="email" onChange={e => handleChange(e)}/>
                 </p>
-                <p>
+                <p>cd
                     Password&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
                     <input type = "password" name="password" onChange={e => handleChange(e)}/>
                 </p>
@@ -174,7 +174,7 @@ function AddUserPage(props) {
                     </select>
                 </p>
                 <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                {modalShow == true && handleAlert("It is not valid format of email. Please check the format.")}
+                {modalShow === true && handleAlert("It is not valid format of email. Please check the format.")}
 
                 <input type="reset" value="RESET" onClick={handleReset}></input>
             </form>
@@ -245,7 +245,7 @@ function EditUserPage(props) {
     }
     
     const handleSubmitBtn = () => {
-        if(modalShow == true) {
+        if(modalShow === true) {
             handleAlert("It is not valid format of email. Please check the format.")
     } else
     {
@@ -274,7 +274,7 @@ function EditUserPage(props) {
         } else {
             userConfirmation = window.confirm("Do you really want to edit this user information?");
         }
-        if(valid == true && isEmail(selectedData.email) == true && userConfirmation == true){
+        if(valid === true && isEmail(selectedData.email) === true && userConfirmation === true){
         let EditedUserdata = new FormData();
 
         EditedUserdata.append('firstName', selectedData.firstName);
@@ -351,7 +351,7 @@ function EditUserPage(props) {
                     Username&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
                     <input type = "text" name="userName" defaultValue={selectedData.userName} onChange={e => handleChange(e)}/>
                 </p>
-                {valid == false && handleAlert("This user name already exists. Please try another user name.")}
+                {valid === false && handleAlert("This user name already exists. Please try another user name.")}
                 <p>
                     Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;
                     <input type = "email" name="email" defaultValue={selectedData.email} onChange={e => handleChange(e)}/>
@@ -369,7 +369,7 @@ function EditUserPage(props) {
                     </select>
                 </p>
                 <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                {modalShow == true && handleAlert("It is not valid format of email. Please check the format.")}
+                {modalShow === true && handleAlert("It is not valid format of email. Please check the format.")}
                 
                 <button type="delete" value="DELETE" onClick={(e) => handleDelete(e)}>DELETE</button>
             </form>
@@ -448,7 +448,7 @@ function UsersPage() {
                             });
             setSearchResults(SortResult);
         } else if (sortTrigger === 2) {
-            var SortResult = searchResults.sort((a,b) =>
+            SortResult = searchResults.sort((a,b) =>
             {if(a[sortTarget] > b[sortTarget]) {
                 return 1;
             } else if (a[sortTarget] === b[sortTarget]) {

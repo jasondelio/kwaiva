@@ -477,8 +477,8 @@ function SongsPage() {
                             <ul>
                                 {searchResults.map((song, index) => (
                                     <li className="row" key={index} onClick={() => { handleEditButton(song.song_id, "play"); }}>
-                                        <img id="imgclass1" src={Buffer.from(song.photo.data, "base64").toString('ascii')} />
-                                        <p className="title"><b>{song.title}</b><br /><a className="musician">by {song.musician}</a></p>
+                                        <img id="imgclass1" alt="song_img" src={Buffer.from(song.photo.data, "base64").toString('ascii')} />
+                                        <p className="title"><b>{song.title}</b><br /><p className="musician">By {song.musician}</p></p>
                                         <p className="items">Price: {song.price}<br /> Quantity: {song.quantity}</p>
                                         <p className="items">Last edited<br />{song.created_at}</p>
                                         <button className="UploadButton" onClick={() => { setID(song.song_id); handleEditButton(song.song_id, "edit"); }}>EDIT</button>
