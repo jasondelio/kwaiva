@@ -1,7 +1,7 @@
 import React from 'react'
 import "./DropdownMenu.css"
 import Dropdown from 'react-bootstrap/Dropdown'
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import LoggedInUser from '../Pages/LoggedInUser.js';
 
 function DropdownMenu() {

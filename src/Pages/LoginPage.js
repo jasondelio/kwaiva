@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import { BrowserRouter, Route, Link, Switch, Redirect, useHistory } from 'react-router-dom';
+import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom';
 import "./LoginPage.css";
 import LoggedInUser from "./LoggedInUser.js";
 import Axios from 'axios';
+import { Button } from 'react-bootstrap';
 
 function LoginPage() {
   const [username, setUsername] = useState('');
@@ -33,7 +34,7 @@ function LoginPage() {
     }).then(function (response) {
       //handle success
       var isValid = response.data;
-      if (isValid == "Yes") {
+      if (isValid === "Yes") {
         click();
       }
       else {
@@ -46,7 +47,7 @@ function LoginPage() {
   };
 
   const handlerKeyPressed = (event) => {
-    if (event.key == 'Enter' && username.length >= 1 && password.length >= 1) {
+    if (event.key === 'Enter' && username.length >= 1 && password.length >= 1) {
       handleVerification(username, password);
     }
   };
@@ -64,7 +65,7 @@ function LoginPage() {
         <h1>ADMIN LOGIN</h1>
         <input className="inputbox" placeholder="USERNAME" onChange={(e) => setUsername(e.target.value)} onKeyPress={(e) => handlerKeyPressed(e)} />
         <input type="password" className="inputbox" placeholder="PASSWORD" onChange={(e) => setPassword(e.target.value)} onKeyPress={(e) => handlerKeyPressed(e)} />
-        <a className="login" onClick={() => handlerClicked()}>LOGIN</a>
+        <Button className="login" onClick={() => handlerClicked()}>LOGIN</Button>
       </div>
     </div>
   );
