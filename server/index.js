@@ -73,7 +73,7 @@ app.get('/login/verify', (req, res) => {
 
 app.get('/songs/get', (req, res) => {
   connection.query('select song_id, title, musician, photo, price, genre, youtubelink, quantity, release_year, created_at, sold_number from Songs;', (err, result) => {
-    var changedResult = result.map((value) => ({ ...value, "created_at": value["created_at"].toLocaleDateString('zh-Hans-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).replace(',', '').replace('/', '-').replace('/', '-') }));
+    var changedResult = result.map((value) => ({ ...value, "created_at": value["created_at"].toLocaleDateString('zh-Hans-CN', { year: 'numeric', month: 'numeric', day: 'numeric' }).replace(',', '').replace('/', '-').replace('/', '-') })).map((value) => ({ ...value, "photo": Buffer.from(value["photo"], "base64").toString('ascii') }));
     res.send(changedResult)
   })
 })
@@ -85,9 +85,30 @@ app.get('/songs/getsong', (req, res) => {
   var idx = req.query.songID;
 
   connection.query(selectIdxOne, [idx], (err, result) => {
-    console.log(err);
-    console.log(result);
+    // console.log(err);
+    // console.log(result);
     res.send(result)
+  })
+})
+
+app.get('/songs/getsongbuffer', (req, res) => {
+
+  const selectIdxOne = 'select music from Songs where song_id=?;'
+  var idx = req.query.songID;
+
+  connection.query(selectIdxOne, [idx], (err, result) => {
+    // console.log(err);
+    // console.log(result[0]["music"]);
+    // console.log(result);
+    // res.send(result)
+    // console.log("get song buffer")
+    if (result.length === 0) {
+      res.send("")
+    }
+    else {
+      var newone = Buffer.from(result[0]["music"], "base64").toString('ascii')
+      res.send(newone)
+    }
   })
 })
 
@@ -106,12 +127,14 @@ app.post('/getform', (req, res) => {
 
   connection.query(insertOne, [title, musician, photo, music, price, quantity, quantity, gender, urlyoutube, releaseYear], (err, result) => {
     if (err) {
+      console.log("Error");
       console.log(err);
-      res.send("Error")
+      res.send("Error");
     }
     else {
+      console.log("Succeed");
       console.log(result);
-      res.send("Succeed")
+      res.send("Succeed");
     }
   })
 })
@@ -154,8 +177,14 @@ app.post('/deletesong', (req, res) => {
       res.send("Error")
     }
     else {
+      // console.log(result["affectedRows"])
       console.log(result);
-      res.send("Succeed")
+      if (result["affectedRows"] === 0) {
+        res.send("Failed because wrong id")
+      }
+      else {
+        res.send("Succeed")
+      }
     }
   })
 })
