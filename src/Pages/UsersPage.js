@@ -405,17 +405,17 @@ function UsersPage() {
             var data = res.data;
             const results = data.map((user)=> user);
             setUserData(results);
+            setSearchResults(userdata);
         })
-
-        
 
         // console.log(count);
         if(sortTrigger === 1){
             var SortResult = userdata.sort((a,b) =>
-                                {if(a[sortTarget] > b[sortTarget]) {
+                                {if(a[sortTarget].toLocaleLowerCase() > b[sortTarget].toLocaleLowerCase()) {
                                     return 1;
-                                } else if (a[sortTarget] === b[sortTarget]) {
-                                    return a['userName'] > b['userName']  ? 1 : - 1 ;
+                                } else if (a[sortTarget].toLocaleLowerCase() === b[sortTarget].toLocaleLowerCase()) {
+                                    console.log("?");
+                                    return a['userName'].toLocaleLowerCase() > b['userName'].toLocaleLowerCase()  ? 1 : - 1 ;
                                 } else {
                                     return -1;
                                 }
@@ -423,10 +423,11 @@ function UsersPage() {
             setSearchResults(SortResult);
         } else if (sortTrigger === 2) {
             SortResult = userdata.sort((a,b) =>
-            {if(a[sortTarget] > b[sortTarget]) {
+            {if(a[sortTarget].toLocaleLowerCase() > b[sortTarget].toLocaleLowerCase()) {
                 return 1;
-            } else if (a[sortTarget] === b[sortTarget]) {
-                return a['userName'] > b['userName']  ? 1 : - 1 ;
+            } else if (a[sortTarget].toLocaleLowerCase() === b[sortTarget].toLocaleLowerCase()) {
+                console.log("?");
+                return a['userName'].toLocaleLowerCase() > b['userName'].toLocaleLowerCase()  ? 1 : - 1 ;
             } else {
                 return -1;
             }
