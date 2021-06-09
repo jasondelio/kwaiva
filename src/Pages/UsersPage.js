@@ -461,28 +461,33 @@ function UsersPage() {
                     onChange = {handleChange}
                 />
                 <table cellSpacing = "0" cellPadding = "0">
-                    <tr className = "header">
-                        <th onClick={(e) => handleSort(e, 'userName')}>Username</th>
-                        <th onClick={(e) => handleSort(e, 'email')}>Email Address</th>
-                        <th onClick={(e) => handleSort(e, 'firstName')}>First Name</th>
-                        <th onClick={(e) => handleSort(e, 'lastName')}>Last name</th>
-                        <th onClick={(e) => handleSort(e, 'role')}>Role</th>
-                    </tr>
-                    {searchResults.map((user, index) =>(
-                        <tr className = "list" key = {index} onClick={() => {setrowData(user); setModalUpdateShow(true)}}>
-                            <td id={user.keyId} >{user.userName}</td>
-                            <td id={user.keyId} >{user.email}</td>
-                            <td id={user.keyId} >{user.firstName}</td>
-                            <td id={user.keyId} >{user.lastName}</td>
-                            <td id={user.keyId} >{user.role}</td>
-                            {modalUpdateShow && <EditUserPage
-                        show={modalUpdateShow}
-                        onHide={() => setModalUpdateShow(false)}
-                        title = "EDIT USER"
-                        userdata = {rowData}
-                        />}
-
+                    <tbody>
+                        <tr className = "header">
+                            <th onClick={(e) => handleSort(e, 'userName')}>Username</th>
+                            <th onClick={(e) => handleSort(e, 'email')}>Email Address</th>
+                            <th onClick={(e) => handleSort(e, 'firstName')}>First Name</th>
+                            <th onClick={(e) => handleSort(e, 'lastName')}>Last name</th>
+                            <th onClick={(e) => handleSort(e, 'role')}>Role</th>
                         </tr>
+                    </tbody>
+                    {searchResults.map((user, index) =>(
+                        <tbody key = {index} onClick={() => {setrowData(user); setModalUpdateShow(true)}}>
+                            <tr className = "list">
+                                <td id={user.keyId} >{user.userName}</td>
+                                <td id={user.keyId} >{user.email}</td>
+                                <td id={user.keyId} >{user.firstName}</td>
+                                <td id={user.keyId} >{user.lastName}</td>
+                                <td id={user.keyId} >{user.role}</td>
+                                {modalUpdateShow && <EditUserPage
+                            show={modalUpdateShow}
+                            onHide={() => setModalUpdateShow(false)}
+                            title = "EDIT USER"
+                            userdata = {rowData}
+                            />}
+
+                            </tr>
+                        </tbody>
+
 
                     ))}
 
