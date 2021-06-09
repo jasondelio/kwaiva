@@ -6,7 +6,6 @@ import Modal from 'react-bootstrap/Modal'
 import { IoClose } from "react-icons/io5";
 import Axios from 'axios';
 import { useHistory } from 'react-router-dom';
-import { Alert } from "react-native";
 
 const hashPassword = (pass) => {
     var bcrypt = require('bcryptjs');
@@ -63,7 +62,7 @@ function AddUserPage(props) {
     }
 
     const isEmail = (v) => {
-        const pattern = /[a-zA-Z0-9]+[\.]?([a-zA-Z0-9]+)?[\@][a-z]{3,9}[\.][a-z]{2,5}/g;
+        const pattern = /[a-zA-Z0-9]+?([a-zA-Z0-9]+)?[a-z]{3,9}[a-z]{2,5}/g;
         return pattern.test(v);
     }
 
@@ -187,7 +186,6 @@ function EditUserPage(props) {
     const history = useHistory();
     const [valid, setValid] = useState(true);
     const [modalShow, setModalShow] = useState(false);
-    const [confirm, setconfirm] = useState(false);
     const [selectedData, setSelectedData] = useState({
         keyId: props.userdata.keyId,
         firstName: props.userdata.firstName,
@@ -234,7 +232,7 @@ function EditUserPage(props) {
     }
 
     const isEmail = (v) => {
-        const pattern = /[a-zA-Z0-9]+[\.]?([a-zA-Z0-9]+)?[\@][a-z]{3,9}[\.][a-z]{2,5}/g;
+        const pattern = /[a-zA-Z0-9]+?([a-zA-Z0-9]+)?[a-z]{3,9}[a-z]{2,5}/g;
         return pattern.test(v);
     }
 
@@ -243,24 +241,6 @@ function EditUserPage(props) {
         setValid(true);
         setModalShow(false);
     }
-    
-    const handleSubmitBtn = () => {
-        if(modalShow === true) {
-            handleAlert("It is not valid format of email. Please check the format.")
-    } else
-    {
-        Alert.alert("Do you really want to edit this user information?", [ {
-            text: "Cancel",
-            onPress: () => setconfirm(false),
-            style: "cancel"
-        },
-            {
-                text: "Ok",
-                onPress: () => history.go(0)
-            }
-        ])
-    }
-}
     
 
     const handleSubmit = (e) => {
@@ -427,17 +407,11 @@ function UsersPage() {
             setUserData(results);
         })
 
-        const results = userdata.filter(user =>
-            user.userName.toLocaleLowerCase().includes(searchTerm) ||
-            user.lastName.toLocaleLowerCase().includes(searchTerm) ||
-            user.firstName.toLocaleLowerCase().includes(searchTerm) ||
-            user.email.toLocaleLowerCase().includes(searchTerm)
-          );
+        
 
-          setSearchResults(results);
         // console.log(count);
         if(sortTrigger === 1){
-            var SortResult = searchResults.sort((a,b) =>
+            var SortResult = userdata.sort((a,b) =>
                                 {if(a[sortTarget] > b[sortTarget]) {
                                     return 1;
                                 } else if (a[sortTarget] === b[sortTarget]) {
@@ -448,7 +422,7 @@ function UsersPage() {
                             });
             setSearchResults(SortResult);
         } else if (sortTrigger === 2) {
-            SortResult = searchResults.sort((a,b) =>
+            SortResult = userdata.sort((a,b) =>
             {if(a[sortTarget] > b[sortTarget]) {
                 return 1;
             } else if (a[sortTarget] === b[sortTarget]) {
@@ -458,6 +432,16 @@ function UsersPage() {
             }
         }).reverse();
             setSearchResults(SortResult);
+        }
+
+        if(searchTerm.length > 0) {
+            const results = userdata.filter(user =>
+                user.userName.toLocaleLowerCase().includes(searchTerm) ||
+                user.lastName.toLocaleLowerCase().includes(searchTerm) ||
+                user.firstName.toLocaleLowerCase().includes(searchTerm) ||
+                user.email.toLocaleLowerCase().includes(searchTerm)
+              );
+          setSearchResults(results);
         }
 
           
