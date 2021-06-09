@@ -19,7 +19,7 @@ function DropdownMenu() {
         <div className="DropdownMenu">
             <Dropdown>
                 <Dropdown.Toggle variant="success" id="dropdown-basic" className="dropdown">
-                    ADMIN&nbsp;&nbsp;<i class="Downarrow"></i>
+                    ADMIN&nbsp;&nbsp;<i className="Downarrow"></i>
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu className="menu" alignRight='true'>

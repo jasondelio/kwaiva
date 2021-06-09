@@ -45,7 +45,7 @@ function AddUserPage(props) {
             headers: { "Content-Type": "multipart/form-data" },
         }).then(function (res) {
             var data = res.data;
-            
+
             if(data.length < 1) {
                 return true;
             } else {
@@ -87,7 +87,7 @@ function AddUserPage(props) {
         const name = target.name;
         setuserInfo({ ...userInfo, [name]: value });
     })
-    
+
 
     const handleSubmit = ((event) => {
         event.preventDefault()
@@ -136,7 +136,7 @@ function AddUserPage(props) {
         <Modal.Header className = "header">
             <IoClose className = "close" size={30} onClick={props.onHide}/>
             <Modal.Title>
-                <h4>{props.title}</h4> 
+                <h4>{props.title}</h4>
             </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -193,7 +193,7 @@ function EditUserPage(props) {
         password: props.userdata.password,
         role: props.userdata.role
     });
-    
+
     const handleChange = (e) => {
 
         const target = e.target;
@@ -239,7 +239,7 @@ function EditUserPage(props) {
         setValid(true);
         setModalShow(false);
     }
-    
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -312,7 +312,7 @@ function EditUserPage(props) {
         <Modal.Header className = "header">
             <IoClose className = "close" size={30} onClick={() => history.go(0)}/>
             <Modal.Title>
-                <h4>{props.title}</h4> 
+                <h4>{props.title}</h4>
             </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -348,7 +348,7 @@ function EditUserPage(props) {
                 </p>
                 <input type="submit" value="SUBMIT"></input>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 {modalShow === true && handleAlert("It is not valid format of email. Please check the format.")}
-                
+
                 <button type="delete" value="DELETE" onClick={(e) => handleDelete(e)}>DELETE</button>
             </form>
         </Modal.Body>
@@ -439,13 +439,13 @@ function UsersPage() {
           setSearchResults(results);
         }
 
-          
-    }, [userdata])
-     
+
+     }, [userdata, sortTarget, searchTerm, sortTrigger])
+
     return (
         <React.Fragment>
             <Sidebar/>
-            <Topbar/>        
+            <Topbar/>
             <div className = "UsersPage">
                 <button className = "AddButton" onClick={() => setModalShow(true)}>ADD USER</button>
                 <AddUserPage
@@ -453,9 +453,9 @@ function UsersPage() {
                 onHide={() => setModalShow(false)}
                 title = "ADD USER"
                 />
-                <input 
-                    className = "SearchBar" 
-                    type = "search" 
+                <input
+                    className = "SearchBar"
+                    type = "search"
                     placeholder = "Search an user .."
                     value = {searchTerm}
                     onChange = {handleChange}
@@ -481,12 +481,12 @@ function UsersPage() {
                         title = "EDIT USER"
                         userdata = {rowData}
                         />}
-                            
-                        </tr> 
-                        
+
+                        </tr>
+
                     ))}
-                    
-                    
+
+
                 </table>
             </div>
         </React.Fragment>
