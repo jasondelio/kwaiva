@@ -48,10 +48,8 @@ function AddUserPage(props) {
             
             if(data.length < 1) {
                 return true;
-                // setValid(true);
             } else {
                 return false;
-                // setValid(false);
             }
 
         })
@@ -407,14 +405,11 @@ function UsersPage() {
             setUserData(results);
             setSearchResults(userdata);
         })
-
-        // console.log(count);
         if(sortTrigger === 1){
             var SortResult = userdata.sort((a,b) =>
                                 {if(a[sortTarget].toLocaleLowerCase() > b[sortTarget].toLocaleLowerCase()) {
                                     return 1;
                                 } else if (a[sortTarget].toLocaleLowerCase() === b[sortTarget].toLocaleLowerCase()) {
-                                    console.log("?");
                                     return a['userName'].toLocaleLowerCase() > b['userName'].toLocaleLowerCase()  ? 1 : - 1 ;
                                 } else {
                                     return -1;
@@ -426,7 +421,6 @@ function UsersPage() {
             {if(a[sortTarget].toLocaleLowerCase() > b[sortTarget].toLocaleLowerCase()) {
                 return 1;
             } else if (a[sortTarget].toLocaleLowerCase() === b[sortTarget].toLocaleLowerCase()) {
-                console.log("?");
                 return a['userName'].toLocaleLowerCase() > b['userName'].toLocaleLowerCase()  ? 1 : - 1 ;
             } else {
                 return -1;
